@@ -1,0 +1,26 @@
+<header class="w-[95vw] h-[10vh] mx-auto">
+  <nav class="w-2/4 h-full flex justify-around items-center">
+    <div
+      id="home"
+      class="navContent w-1/4 h-2/5 flex justify-center items-center cursor-pointer hover:bg-blue-500 hover:text-white rounded-lg transition-all"
+      (click)="navigateToDynamicPage('')"
+    >
+      Dashboard
+    </div>
+    <div
+      id="project"
+      class="navContent w-1/4 h-2/5 flex justify-center items-center cursor-pointer hover:bg-blue-500 hover:text-white rounded-lg transition-all"
+      (click)="navigateToDynamicPage('project')"
+    >
+      Project
+    </div>
+    <div
+      id="contact"
+      class="navContent w-1/4 h-2/5 flex justify-center items-center cursor-pointer hover:bg-blue-500 hover:text-white rounded-lg transition-all"
+      (click)="navigateToDynamicPage('contact')"
+    >
+      Contact
+    </div>
+  </nav>
+  <div class="search"></div>
+</header>
