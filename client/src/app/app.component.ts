@@ -19,7 +19,6 @@ export class AppComponent implements OnInit {
     if (!this.isLogin) {
       this.router.navigate(['/login']);
     }
-    console.log(this.pathLogin)
   }
   constructor(private router: Router) {
   }

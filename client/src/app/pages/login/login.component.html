@@ -1,6 +1,6 @@
 <div class="flex h-screen">
     <!-- Left Pane -->
-    <div class="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
+    <div class="hidden lg:flex items-center justify-center flex-1 bg-slate-300 text-black">
       <div class="max-w-md text-center">
         <svg xmlns="http://www.w3.org/2000/svg" width="524.67004" height="531.39694" class="w-full" alt="https://undraw.co/illustrations" title="https://undraw.co/illustrations" viewBox="0 0 524.67004 531.39694" xmlns:xlink="http://www.w3.org/1999/xlink">
           <polygon points="117.67523 88.74385 113.67523 109.74385 133.61763 115.36589 131.1398 92.94604 117.67523 88.74385" fill="#a0616a" />
@@ -73,7 +73,7 @@
       </div>
     </div>
     <!-- Right Pane -->
-    <div class="w-full bg-gray-100 lg:w-1/2 flex items-center justify-center">
+    <div class="w-full bg-slate-400 lg:w-1/2 flex items-center justify-center">
       <div class="max-w-md w-full p-6">
         <h1 class="text-3xl font-semibold mb-6 text-black text-center">Sign Up</h1>
         <h1 class="text-sm font-semibold mb-6 text-gray-500 text-center">Join to Our Community with all time access and free </h1>
@@ -97,20 +97,20 @@
         <div class="mt-4 text-sm text-gray-600 text-center">
           <p>or with email</p>
         </div>
-        <form action="#" method="POST" class="space-y-4">
+        <div class="space-y-4">
           <!-- Your form elements go here -->
           <div>
             <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
-            <input type="text" id="username" name="username" class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
+            <input #username type="text" id="username" name="username" class="mt-1 p-2 w-full border rounded-md outline-none focus:border-blue-500 focus:ring-offset-3 focus:ring-gray-300 transition-colors duration-300">
           </div>
           <div>
             <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-            <input type="password" id="password" name="password" class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
+            <input #password type="password" id="password" name="password" class="mt-1 p-2 w-full border rounded-md outline-none focus:border-blue-500 focus:ring-offset-3 focus:ring-gray-300  transition-colors duration-300">
           </div>
           <div>
-            <button type="submit" class="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300">Login</button>
+            <button (click)="handleSubmit({username:username.value,password:password.value})" type="submit" class="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300">Login</button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   </div>

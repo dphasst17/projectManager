@@ -1,1 +1,7 @@
+.env
+.history
 /node_modules
+
+test.http
+docker-compose.yml
+Dockerfile
