@@ -27,20 +27,28 @@ export const getProjectByStaff = (idStaff) => {
     WHERE i.idUser = '${idStaff}'`;
     return sql;
 }
+
 export const getAllTask = () => {
     const sql = ``;
     return sql;
 }
-export const getTaskByProject = () => {
-    const sql = ``;
+
+export const getTaskByProject = (idProject) => {
+    const sql = `SELECT idProject,COUNT(idProject) AS total,
+    CONCAT('[',GROUP_CONCAT(
+        JSON_OBJECT('assignTo',assignedTo,'name',name,'description',description,'startDate',startDate,'endDate',endDate,'finishDate',finishDate,'status',status)
+        ),']')AS detail 
+    FROM task WHERE idProject = ${idProject}`;
     return sql;
 }
-export const getTaskByStaff = () => {
-    const sql = ``;
+
+
+export const getTaskByStaff = (idUser) => {
+    const sql = `SELECT idProject,name,description,startDate,endDate,finishDate,status FROM task WHERE assignedTo = '${idUser}'`;
     return sql;
 }
 export const getAllExpense = () => {
-    const sql = ``;
+    const sql = `SELECT SUM(expense) AS total, CONCAT('[',GROUP_CONCAT(JSON_OBJECT('idProject',idProject,'expense',expense,'spent',spent)),']') AS detail FROM project`;
     return sql;
 }
 export const insertProject = (data) => {
@@ -48,7 +56,17 @@ export const insertProject = (data) => {
     ('${data.name}','${data.start}','${data.end}',${data.expense},${data.teamSize},${data.totalTask});`;
     return sql;
 }
-export const insertProjectDetail = () => {
-    const sql = ``;
+export const insertProjectDetail = (idProject,listUser) => {
+    const resultInsert = listUser.map(e => `(${idProject},'${e.idUser}','${e.role}')`)
+    const sql = `INSERT INTO projectDetail(idProject,idUser,role)VALUES ${resultInsert}`;
+    return sql;
+}
+export const insertTask = (data) => {
+     const sql = `INSERT INTO task(idProject,assignedTo,name,description,startDate,endDate)
+     VALUES(${data.idProject},'${data.assigned}','${data.name}','${data.desc}','${data.startDate}','${data.endDate}')`;
+     return sql;
+}
+export const updateStatusTask = (idTask,status) => {
+    const sql = `UPDATE task SET status = '${status}' WHERE idTask = ${idTask};`
     return sql;
 }

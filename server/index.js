@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 } from "./middleware/index.js"; */
 import authRouter from "./api/auth/auth.js";
 import projectRouter from "./api/project/project.js"
+import userRouter from "./api/user/user.js"
 import { handleSendMail } from "./utils/handle.js";
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -40,6 +41,7 @@ app.get("/", (req, res) => {
 });
 app.use('/auth',authRouter)
 app.use('/api/project',projectRouter)
+app.use('/user',userRouter)
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

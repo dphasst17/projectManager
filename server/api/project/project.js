@@ -60,7 +60,44 @@ router.get('/detail/:idProject',(req,res) => {
         response.successResponseData(res,200,parseData)
     })
 })
-router.post('/insert',(req,res) => {
+router.get('/expense',(req,res) => {
+    const sql = sqlQuery.getAllExpense()
+    pool.query(sql,(err,results) => {
+        response.errResponseMessage(res,err,500,message.err500Message())
+
+        const parseData = results.map(e => {
+            return {
+                ...e,
+                detail: JSON.parse(e.detail)
+            }
+        })
+        response.successResponseData(res,200,parseData)
+    })
+})
+/* {name:name,start:startDate,end:endDate,expense:expense,teamSize:teamSize,totalTask:totalTask,detail:[{idUser:user1,role:role1}]} */
+router.post('/create',(req,res) => {
+    const data = req.body;
+    const sql = sqlQuery.insertProject(data);
+    pool.query(sql, (err,results) => {
+        response.errResponseMessage(res,err,500,message.err500Message());
+        const resultId = results.insertId
+        const sqlDetail = sqlQuery.insertProjectDetail(resultId,data.detail)
+        pool.query(sqlDetail,(errDetail,resultsDetail) => {
+            response.errResponseMessage(res,errDetail,500,message.err500Message());
+            response.successResponseMessage(res,201,message.createItemsMessage('project'))
+        })
+    })
 
 })
+/* idProject,detail:[{}] detail : assignedTo,name,description,startDate,endDate */
+router.post('/create/task',(req,res) => {
+    const data = req.body;
+    const sql = sqlQuery.insertTask(data.idProject,data.detail);
+    pool.query(sql,(err,results) => {
+        response.errResponseMessage(res,err,500,message.err500Message());
+        response.successResponseMessage(res,201,message.createItemsMessage('task'))
+    })
+})
+
+
 export default router

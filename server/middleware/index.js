@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { poolConnectDB } from "../db/db.js";
 import { checkRole } from "../db/statement/auth.js";
 const pool = poolConnectDB();
+
 export const verify  = (req,res,next) => {
     const authorizationHeader = req.headers["authorization"];
     if (!authorizationHeader) return res.sendStatus(401);
