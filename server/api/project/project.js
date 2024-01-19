@@ -38,6 +38,39 @@ router.get('/filter/:year',(req,res) => {
     })
 
 })
+router.post('/update/status/auto',(req,res) => {
+    const currentDate = new Date().toLocaleDateString().split("/").reverse().join("-")
+    const sql = sqlQuery.updateStatusProjectByDate(currentDate)
+    pool.query(sql,(err,results) => {
+        response.errResponseMessage(res,err,500,message.err500Message())
+
+        response.successResponseMessage(res,200,message.updateItemsMessage('status in project'))
+    })
+})
+router.get('/status/:statusProject',(req,res) => {
+    const status = req.params['statusProject']
+    const sql = sqlQuery.getProjectByStatus(status);
+    pool.query(sql,(err,results) => {
+        response.errResponseMessage(res,err,500,message.err500Message())
+        const parseData = results.map(e => {
+            const task = JSON.parse(e.task)
+            const team = JSON.parse(e.teamDetail)
+            return {
+                ...e,
+                startDate:response.formatDate(e.startDate),
+                endDate:response.formatDate(e.endDate),
+                task: task === null ? [] : task.map(e => {return{
+                    ...e,
+                    start:response.formatDate(e.start),
+                    end:response.formatDate(e.end),
+                    finish:response.formatDate(e.finish),
+                }}),
+                teamDetail:team === null ? [] : team,
+            }
+        })
+        response.successResponseData(res,200,parseData)
+    })
+})
 router.get('/detail/:idProject',(req,res) => {
     const idProject = req.params['idProject']
     const sql = sqlQuery.getProjectDetail(idProject)
@@ -72,6 +105,21 @@ router.get('/expense',(req,res) => {
             }
         })
         response.successResponseData(res,200,parseData)
+    })
+})
+router.get('/task/status/:statusDetail',(req,res) => {
+    const status = req.params['statusDetail']
+    const sql = sqlQuery.getTaskByStatus(status);
+    pool.query(sql,(err,results) => {
+        response.errResponseMessage(res,err,500,message.err500Message())
+        const parseDate = results.map(e => {
+            const parseDetail = JSON.parse(e.detail)
+            return {
+                ...e,
+                detail:parseDetail.every(c => Object.values(c).every(value => value === null)) ? [] : parseDetail,
+            }
+        })
+        response.successResponseData(res,200,parseDate)
     })
 })
 /* {name:name,start:startDate,end:endDate,expense:expense,teamSize:teamSize,totalTask:totalTask,detail:[{idUser:user1,role:role1}]} */

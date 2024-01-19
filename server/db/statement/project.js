@@ -7,7 +7,7 @@ export const getProjectDetail = (idProject) => {
     const sql = `SELECT p.idProject, p.name, p.startDate, p.endDate, p.expense, p.spent, p.teamSize, p.totalTask, p.projectStatus, 
     (SELECT CONCAT('[',
         GROUP_CONCAT(
-            DISTINCT JSON_OBJECT('staff',i.name,'role',d.role,'action',d.action)
+            DISTINCT JSON_OBJECT('staff',i.name,'role',d.role,'area',i.area,'action',d.action)
         ),
     ']') FROM projectDetail d JOIN info i ON d.idUser = i.idUser WHERE d.idProject = p.idProject) AS teamDetail, 
     (SELECT CONCAT('[',
@@ -19,6 +19,22 @@ export const getProjectDetail = (idProject) => {
     WHERE p.idProject = ${idProject};`;
     return sql;
 }
+export const getProjectByStatus = (status) => {
+    const sql = `SELECT p.idProject, p.name, p.startDate, p.endDate, p.expense, p.spent, p.teamSize, p.totalTask, p.projectStatus, 
+    (SELECT CONCAT('[',
+        GROUP_CONCAT(
+            DISTINCT JSON_OBJECT('staff',i.name,'role',d.role,'area',i.area,'action',d.action)
+        ),
+    ']') FROM projectDetail d JOIN info i ON d.idUser = i.idUser WHERE d.idProject = p.idProject) AS teamDetail, 
+    (SELECT CONCAT('[',
+        GROUP_CONCAT(
+            DISTINCT JSON_OBJECT('assigned',t.assignedTo,'nameStaff',i.name,'name',t.name,'description',t.description,'start',t.startDate,'end',t.endDate,'finish',t.finishDate,'status',t.status)
+        ),
+    ']') FROM task t JOIN info i ON t.assignedTo = i.idUser WHERE t.idProject = p.idProject) AS task 
+    FROM project p
+    WHERE p.projectStatus = '${status}';`;
+    return sql;
+}
 export const getProjectByStaff = (idStaff) => {
     const sql = `SELECT p.idProject,p.name,p.startDate,p.endDate,p.expense,p.spent,p.teamSize,p.totalTask,p.projectStatus 
     FROM project p 
@@ -28,12 +44,7 @@ export const getProjectByStaff = (idStaff) => {
     return sql;
 }
 
-export const getAllTask = () => {
-    const sql = ``;
-    return sql;
-}
-
-export const getTaskByProject = (idProject) => {
+export const getTaskDetail = (idProject) => {
     const sql = `SELECT idProject,COUNT(idProject) AS total,
     CONCAT('[',GROUP_CONCAT(
         JSON_OBJECT('assignTo',assignedTo,'name',name,'description',description,'startDate',startDate,'endDate',endDate,'finishDate',finishDate,'status',status)
@@ -42,6 +53,14 @@ export const getTaskByProject = (idProject) => {
     return sql;
 }
 
+export const getTaskByStatus = (status) => {
+    const sql = `SELECT p.idProject,p.totalTask,
+    CONCAT('[',GROUP_CONCAT(JSON_OBJECT('assignedTo',t.assignedTo,'name',t.name,'description',t.description,'start',t.startDate,'endDate',t.endDate,'finishDate',t.finishDate,'status',t.status)),']')AS detail 
+    FROM project p 
+    LEFT JOIN task t ON p.idProject = t.idProject 
+    WHERE projectStatus = '${status}'`;
+    return sql;
+}
 
 export const getTaskByStaff = (idUser) => {
     const sql = `SELECT idProject,name,description,startDate,endDate,finishDate,status FROM task WHERE assignedTo = '${idUser}'`;
@@ -68,5 +87,10 @@ export const insertTask = (data) => {
 }
 export const updateStatusTask = (idTask,status) => {
     const sql = `UPDATE task SET status = '${status}' WHERE idTask = ${idTask};`
+    return sql;
+}
+
+export const updateStatusProjectByDate = (currentDate) => {
+    const sql = `UPDATE project SET projectStatus = 'processing' WHERE startDate = '${currentDate}' AND projectStatus = "hasn't started";`;
     return sql;
 }

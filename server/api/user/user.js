@@ -31,4 +31,12 @@ router.put('/update',verify,(req,res) => {
         response.successResponseMessage(res,200,message.updateItemsMessage('user'))
     })
 })
+router.get('/staff',(req,res) => {
+    const sql = sqlQuery.getAll()
+    pool.query(sql,(err,results) => {
+        response.errResponseMessage(res,err,500,message.err500Message())
+
+        response.successResponseData(res,200,results)
+    })
+})
 export default router

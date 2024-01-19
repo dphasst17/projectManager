@@ -4,7 +4,7 @@ import { Router,RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rout
 import { HeaderComponent } from './components/layout/header/header.component';
 import { FooterComponent } from './components/layout/footer/footer.component';
 import { Global } from './service/global.service';
-import { environment } from '../environment/env';
+import {ApiService} from "../app/api/api.service"
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -13,16 +13,33 @@ import { environment } from '../environment/env';
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
-  isLogin = localStorage.getItem('isLogin') === 'true'
   pathLogin = window.location.href.split('/')[3];
-  constructor(private router: Router,private globalService: Global) {
+  isLogin = this.globalService.isLogin
+  
+  constructor(private router: Router,private globalService: Global,private apiService: ApiService) {
   }
   ngOnInit(): void {
-    if (!this.isLogin) {
-      this.router.navigate(['/login']);
+    if (!this.globalService.isLogin) {
+      this.router.navigate(['/login'])
+      return
     }
-    console.log(this.globalService.globalVar)
-    console.log(environment.apiUrl)
+    if(new Date() > new Date((this.globalService.exp - 100) * 1000)){
+      localStorage.clear()
+      window.location.href="/login"
+      return
+    }
+    this.apiService.fetchAutoUpdateStatus().then(res => console.log(res.message))
+    this.apiService.fetchProject().then(res => console.log(res))
+    this.apiService.fetchInfo(this.globalService.token).then(async(res) => {
+      if(res.status === 200){
+        this.globalService.changeInfo(res.data);
+      }
+    })
+    this.apiService.fetchStaff().then(res => {
+      if(res.status === 200){
+        this.globalService.changeStaffData(res.data)
+      }
+    })
   }
 
 }

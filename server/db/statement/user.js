@@ -23,3 +23,7 @@ export const updateUser = (idUser,data) => {
     const sql = `UPDATE info SET name = '${data.name}',phone = '${data.phone}',email = '${data.email}',address = '${data.address}',area = '${data.area}' WHERE  idUser = '${idUser}'`;
     return sql;
 }
+export const getAll = () => {
+    const sql = `SELECT i.idUser,i.name,i.email,i.area,a.role FROM info i LEFT JOIN auth a ON i.idUser = a.idUser WHERE i.idUser != 'leader'`
+    return sql
+}

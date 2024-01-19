@@ -83,13 +83,14 @@ router.post('/login', (req, res) => {
                 return;
             }
             if (results.length === 0) {
-                res.status(401).json("Username does not exist")
+                res.status(401).json({status:401,message:"Username does not exist"})
+                return
             }
             const pass_hash = results.map(e => e.password).toString()
             isPassword = bcrypt.compareSync(password, pass_hash);
 
             if (!isPassword) {
-                res.status(401).json("Incorrect Password")
+                res.status(401).json({status:401,message:"Incorrect Password"})
                 return
             }
             const idUser = results.map(e => e.idUser).toString()

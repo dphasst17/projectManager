@@ -1,7 +1,7 @@
 <div class="flex justify-around w-full h-[80vh] bg-slate-200 py-2">
   <div class="w-1/5 h-4/5">
     <h1 class="text-slate-100 font-bold text-[20px] bg-slate-500 rounded-lg py-2 w-full text-center">
-      Leader
+      {{dataInfo?.role.toLocaleUpperCase()}}
     </h1>
 
     <div class="flex flex-col items-center justify-center py-4">
@@ -10,7 +10,7 @@
         src="https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
         alt="Bordered avatar"
       />
-      <strong class="mx-2 mt-3">Team chicken</strong>
+      <strong class="mx-2 mt-3">{{dataInfo?.name.toLocaleUpperCase()}}</strong>
     </div>
     <div class="flex justify-center bg-slate-500 rounded-lg mb-2">
       <h1 class="text-slate-100 font-bold text-[20px] py-1 w-full text-center">
@@ -26,56 +26,38 @@
             class="inline-flex items-center justify-between px-4 py-3 rounded-lg text-black w-full bg-slate-300 "
             aria-current="page"
           >
-            Số lượng thành viên
-            <span class="text-red-600">12</span>
+            Total Member
+            <span class="text-red-600">{{dataStaff.length}}</span>
           </div>
         </li>
         <li>
           <div
-            class="inline-flex items-center px-4 py-3 rounded-lg text-black w-full bg-slate-300 "
+          class="inline-flex items-center justify-between px-4 py-3 rounded-lg text-black w-full bg-slate-300 "
           >
-            Tổng chi phí
+            Total expense
+            <span class="text-red-600">{{totalExpense.toLocaleString('vi-VN')}} USD</span>
           </div>
         </li>
         <li>
           <div
-            class="inline-flex items-center px-4 py-3 rounded-lg  w-full bg-slate-300 text-black "
+            class="inline-flex items-center justify-between px-4 py-3 rounded-lg text-black w-full bg-slate-300 "
           >
-            Các task đang xử lý
+            Task in progress
+            <span class="text-red-600">{{taskProcess}}</span>
           </div>
         </li>
         <li>
           <div
-            class="inline-flex items-center px-4 py-3 rounded-lg  w-full bg-slate-300 text-black "
+            class="inline-flex items-center justify-between px-4 py-3 rounded-lg text-black w-full bg-slate-300 "
           >
-            Dự án sấp triển khai
+            Percent
+            <span class="text-red-600">{{percentProject}} %</span>
           </div>
         </li>
       </ul>
     </div>
   </div>
   <div class="flex-initial w-2/4 h-full bg-slate-400 rounded-lg p-2">
-    
-    <!-- <button
-      class="bg-blue-500 float-right hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    >
-      2022
-      <svg
-        class="w-4 float-right mx-2 h-6 text-gray-800 "
-        aria-hidden="true"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 14 8"
-      >
-        <path
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"
-        />
-      </svg>
-    </button> -->
     <div class="w-full flex justify-center my-2 rounded-lg">
       <h1 class="text-blue-700 text-[20px] font-bold w-52 text-center">
         Overall 
@@ -92,20 +74,20 @@
               scope="row"
               class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap rounded-sm"
             >
-              Chi phí dự án
+              Expense
             </th>
 
-            <td class="px-6 py-4 rounded-sm">$2999</td>
+            <td class="px-6 py-4 rounded-sm">{{projectProcess.expense.toLocaleString('vi-VN')}}</td>
           </tr>
           <tr class="bg-white border-b-2 border-solid border-slate-600">
             <th
               scope="row"
               class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
             >
-            Đã chi
+            Spent
             </th>
 
-            <td class="px-6 py-4">$1999</td>
+            <td class="px-6 py-4">{{projectProcess.spent.toLocaleString('vi-VN')}}</td>
           </tr>
           <tr class="bg-white border-b-2 border-solid border-slate-600">
             <th
@@ -114,7 +96,7 @@
             >
             Còn lại
             </th>
-            <td class="px-6 py-4">$99</td>
+            <td class="px-6 py-4">{{(projectProcess.expense - projectProcess.spent).toLocaleString('vi-VN')}}</td>
           </tr>
         </tbody>
       </table>
@@ -180,8 +162,19 @@
     <h1 class="text-slate-100 font-bold text-[20px] bg-slate-500 rounded-lg py-2 w-full text-center">
       Member
     </h1>
-    <div class="md:flex ml-3 justify-center">
-    
+    <div class="md:flex flex-wrap justify-center">
+      <div class="w-full h-auto rounded-md flex flex-wrap items-center justify-center my-2 cursor-pointer" *ngFor="let area of dataArea" (click)="filterArea(area)">
+        <div [ngClass]="{'bg-blue-700' : currentArea === area}" class="w-full h-[30px] rounded-md flex items-center justify-center bg-slate-500 text-white font-bold my-2 transition-all">{{area.toLocaleUpperCase()}}</div>
+        <div class="detail" [ngClass]="{'w-full': currentArea === area,'w-0 hidden':currentArea !== area}" class='h-auto bg-slate-400 overflow-hidden transition-all rounded-md'>
+          <div id={{area}} *ngFor="let data of dataFilter" 
+          class='w-full h-auto p-2 rounded-md'>
+            <div class="w-full h-[20px] bg-blue-500 text-white text-[15px] font-bold rounded-sm my-1">
+              #{{data.idUser}}
+            </div>
+            <div class="text-white text-[17px] font-bold">{{data.name}}</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
