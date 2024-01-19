@@ -21,7 +21,7 @@ export class HeaderComponent implements OnInit  {
     switch(path){
       case "":
         document.querySelectorAll('.navContent').forEach(e => {
-          e.classList.remove('bg-blue-500','text-white')
+          e.classList.remove('b g-blue-500','text-white')
         })
         document.getElementById('home')?.classList.add("bg-blue-500","text-white");
         break;

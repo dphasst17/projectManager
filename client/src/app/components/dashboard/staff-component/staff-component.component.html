@@ -1,1 +1,129 @@
-<p>Dashboard for Staff</p>
+
+
+<div class="container w-3/4 mx-auto ">
+
+  <div class="flex gap-4 flex-col">
+    <div class="flex gap-4">
+      <div class="rounded-lg bg-blue-500 w-8/12 mt-5 ml-5">
+        <div
+          class="max-w-2xl mx-4 sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-3xl sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto bg-white shadow-xl rounded-lg text-gray-900">
+          <div class="rounded-t-lg h-20 overflow-hidden">
+            <img class="object-cover object-top w-full"
+              src='https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ'
+              alt='Mountain'>
+          </div>
+          <div class="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden">
+            <img class="object-cover object-center h-32"
+              src='https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ'
+              alt='Woman looking front'>
+          </div>
+          <div class="text-center mt-2">
+            <h2 class="font-semibold">Sarah Smith</h2>
+            <p class="text-gray-500">Freelance Web Designer</p>
+          </div>
+
+          <div class="p-4 border-t mx-8 mt-2">
+            <button class="w-40 block mx-auto rounded-full bg-blue-500 hover:shadow-lg font-semibold text-white px-6 py-2" (click)="openModal()">Sửa thông tin</button>
+          </div>
+      </div>
+
+
+    </div>
+    <div class="rounded-lg bg-white w-4/12 mt-5 mr-5 border-solid border-[1px] border-black">
+      <div class="mb-5 ml-2 mt-2 font-bold">About</div>
+      <div class="ml-5 flex ">
+        <img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzgutRMr_00qNd6Njo-RFdUNiqyp3SVDnGbf0OLW9D5DNkinxHb9ZFzZMcebRR1vLLyBY&usqp=CAU"
+          alt="" width="50px">
+        <p class="pt-2.5 ml-2 ">email</p>
+      </div>
+
+      <div class="ml-5 flex ">
+        <img class="mt-5"
+          src="https://png.pngtree.com/png-clipart/20190925/original/pngtree-vector-location-icon-png-image_4973827.jpg"
+          alt="" width="50px">
+        <p class="pt-7 ml-2">dia chi</p>
+      </div>
+
+      <div class="ml-5 flex ">
+        <img class="mt-5 "
+          src="https://png.pngtree.com/png-vector/20190721/ourmid/pngtree-call--icon-in-trendy-style-isolated-background-png-image_1567008.jpg"
+          alt="" width="50px">
+        <p class="pt-7 ml-2">so dien thoai</p>
+      </div>
+    </div>
+  </div>
+  <div class="flex gap-4">
+    <div class="w-8/12 bg-white rounded-lg flex flex-col justify-center items-center mb-5 ml-5 border-solid border-[1px] border-black">
+      <button class="bg-gray-100 text-black font-semibold py-2 px-4 rounded-lg my-2 w-[40%] ">Dự án đang thực hiện
+      </button>
+      <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg w-[40%] ">Dự án đã tham gia</button>
+    </div>
+    <div class="w-4/12 bg-white rounded-lg flex flex-col justify-center items-center mb-5 mr-5 border-solid border-[1px] border-black py-2">
+      <button class="bg-gray-100 text-black font-semibold py-2 px-4 rounded-lg my-2 ">Tổng các dự án đã tham gia:
+      </button>
+      <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg  ">Tổng các task đã thực hiện</button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Form modal -->
+<div [ngClass]="modalScale" *ngIf="showModal" class="fixed inset-0 z-50 flex flex-wrap items-center justify-center ">
+    <div class="bg-white p-4 rounded shadow-lg w-96">
+      <form>
+        <div class="mb-6">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="Name">
+             Name
+          </label>
+          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="text" placeholder="Enter Name">
+        </div>
+        <div class="mb-6">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="Date of birth">
+            Date of birth
+          </label>
+          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="date" placeholder="">
+        </div>
+        <div class="mb-6">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="Phone number">
+            Phone number
+          </label>
+          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="text" placeholder="Enter phone number">
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="Email">
+              Email
+            </label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="text" placeholder="Enter email">
+          </div>
+       
+
+        <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="Address">
+            Address
+            </label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="text" placeholder="Enter address">
+        </div> 
+
+        <div class="flex justify-between">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline " type="button">
+                Update
+              </button>
+              <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" (click)="closeModal()">
+                Close
+              </button>
+        </div>
+         
+        
+
+        
+      </form>
+    </div>
+  </div>
+  
+  <!-- Lớp phủ mờ -->
+  <div *ngIf="showModal" class="fixed inset-0 z-40 bg-black bg-opacity-50"></div>
+  
+    </div>
