@@ -1,0 +1,293 @@
+<div>
+  <div
+    class="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased bg-white dark:bg-gray-700 text-black dark:text-white"
+  >
+    <div class="w-fullh-full mt-2 mb-10">
+      <button
+        (click)="changeCreateForm()"
+        class="w-[150px] h-[30px] bg-green-700 hover:bg-green-600 mx-4 rounded-lg font-bold transition-all"
+      >
+        Create new user
+      </button>
+      <!-- Client Table All User-->
+      <div class="mt-4 mx-4">
+        <div class="w-full overflow-hidden rounded-lg shadow-xs">
+          <div class="w-full overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr
+                  class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
+                >
+                  <th class="w-[30%] px-4 py-3">Name</th>
+                  <th class="w-[15%] px-4 py-3">Role</th>
+                  <th class="w-[15%] px-4 py-3">Area</th>
+                  <th class="w-[20%] px-4 py-3">Action User</th>
+                  <th class="w-[20%] px-4 py-3">Edit</th>
+                </tr>
+              </thead>
+              <tbody
+                class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800"
+              >
+                <tr
+                  *ngFor="let s of staff"
+                  class="bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900 text-gray-700 dark:text-gray-400"
+                >
+                  <td class="px-4 py-3">
+                    <div class="flex items-center text-sm">
+                      <div>
+                        <p class="font-semibold">{{ s.name }}</p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">
+                          {{ s.position }}
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 text-sm">{{ s.role.toUpperCase() }}</td>
+                  <td class="px-4 py-3 text-sm">{{ s.area }}</td>
+                  <td *ngIf="!actionEdit || userEdit !== s.name" class="px-4 py-3 text-xs">
+                    {{ s.action }}
+                  </td>
+                  <td *ngIf="actionEdit && userEdit === s.name" class="px-4 py-3 text-xs">
+                    <select id="newAction" class="w-[80px] bg-slate-700 outline-none text-white">
+                      <option value="none">None</option>
+                      <option value="break">Break</option>
+                    </select>
+                  </td>
+                  
+                  <td class="px-4 py-3 text-xs">
+                    <button *ngIf="!actionEdit || userEdit !== s.name"
+                      (click)="editActionUser(s.name)" class="bg-green-500 w-[100px] text-white py-2 rounded-lg">Edit action</button>
+                    <button *ngIf="actionEdit && userEdit === s.name"
+                      (click)="changeAction(s.action,s.idUser)" class="bg-green-500 w-[100px] text-white py-2 rounded-lg">Submit</button>
+                    <button *ngIf="actionEdit && userEdit === s.name"
+                      (click)="editActionUser(s.name)" class="bg-red-500 w-[100px] text-white py-2 rounded-lg mx-2">Close</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- ./Client Table -->
+
+      <!-- Task Summaries -->
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 p-4 gap-4 text-black dark:text-white"
+      >
+        <div class="md:col-span-2 xl:col-span-3">
+          <h3 class="text-lg font-semibold">
+            Task summaries of recent sprints
+          </h3>
+        </div>
+        <div class="md:col-span-2 xl:col-span-1">
+          <div class="rounded bg-gray-200 dark:bg-gray-800 p-3">
+            <div class="flex justify-between py-1 text-black dark:text-white">
+              <h3 class="text-sm font-semibold">Project</h3>
+            </div>
+
+            <div
+              class="text-sm text-black dark:text-gray-50 mt-2 min-h-[310px]"
+            >
+              <div
+                *ngFor="let p of project"
+                class="flex flex-wrap justify-between bg-white dark:bg-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded mt-1 border-b border-gray-100 dark:border-gray-900 cursor-pointer"
+              >
+                <span class="w-2/4">{{ p.name }}</span>
+                <span class="w-2/5">{{ p.startDate }} - {{ p.endDate }}</span>
+                <span class="w-2/5">Team size: {{ p.teamSize }}</span>
+                <span class="w-2/5">Status: {{ p.projectStatus }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="rounded bg-gray-200 dark:bg-gray-800 p-3">
+            <div class="flex justify-between py-1 text-black dark:text-white">
+              <h3 class="text-sm font-semibold">Tasks to do</h3>
+              <svg
+                class="h-4 fill-current text-gray-600 dark:text-gray-500 cursor-pointer"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M5 10a1.999 1.999 0 1 0 0 4 1.999 1.999 0 1 0 0-4zm7 0a1.999 1.999 0 1 0 0 4 1.999 1.999 0 1 0 0-4zm7 0a1.999 1.999 0 1 0 0 4 1.999 1.999 0 1 0 0-4z"
+                />
+              </svg>
+            </div>
+            <div class="w-full min-h-[260px]">
+              <div
+                class="text-sm text-black dark:text-gray-50 mt-2"
+                *ngFor="let task of currentTaskTodo"
+              >
+                <div class="flex justify-around flex-wrap">
+                  <div
+                    class="w-full flex flex-wrap justify-around bg-white dark:bg-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded mt-1 border-b border-gray-100 dark:border-gray-900 cursor-pointer"
+                  >
+                    <span class="w-2/5">{{ task.name }}</span>
+                    <span class="w-2/5"
+                      >{{ task.startDate }} - {{ task.endDate }}</span
+                    >
+                    <span class="w-2/5"
+                      >Assigned to: {{ task.assignedTo }}</span
+                    >
+                    <span class="w-2/5">Status: {{ task.status }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="Pagination w-full flex justify-around my-2">
+              <div
+                (click)="
+                  changeActivePages(activePageTask > 1 ? activePageTask - 1 : 1)
+                "
+                class="w-[80px] flex justify-center items-center px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 rounded-lg text-white cursor-pointer"
+              >
+                Previous
+              </div>
+              <div
+                (click)="changeActivePages(page)"
+                [ngClass]="{
+                  'bg-gray-200 text-black': activePageTask === page,
+                  'bg-gray-700 text-white': activePageTask !== page
+                }"
+                class="w-[30px] flex items-center justify-center rounded-lg cursor-pointer"
+                *ngFor="let page of pageTask"
+              >
+                {{ page }}
+              </div>
+              <div
+                (click)="
+                  changeActivePages(
+                    activePageTask < currentTaskTodo.length
+                      ? activePageTask + 1
+                      : currentTaskTodo.length
+                  )
+                "
+                class="w-[80px] flex justify-center items-center px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 rounded-lg text-white cursor-pointer"
+              >
+                Next
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ./Task Summaries -->
+    </div>
+  </div>
+</div>
+<div
+  *ngIf="createForm"
+  class="formCreate w-[50vw] h-[95vh] fixed inset-0 top-2 z-50 mx-auto flex items-center justify-center"
+>
+  <div
+    (click)="resetForm();changeCreateForm()"
+    class="fixed inset-0 z-40 bg-black bg-opacity-50"
+  ></div>
+  <form
+    [formGroup]="userForm"
+    class="w-[30vw] h-[80vh] 3xl:h-[60vh] fixed inset-0 top-2 z-50 m-auto flex flex-wrap items-center justify-center bg-white rounded-lg p-2"
+    (ngSubmit)="handleAddNewUser()"
+  >
+    <div class="w-full h-[12%]">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+        Username
+      </label>
+      <input
+        formControlName="username"
+        placeholder="Username"
+        class="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 border-solid border outline-none"
+        [ngClass]="{
+          'border-red-500': userForm.controls.username.invalid,
+          'border-black': !userForm.controls.username.invalid
+        }"
+      />
+    </div>
+    <div class="w-full h-[12%]">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+        Password
+      </label>
+      <input
+        formControlName="password"
+        placeholder="Password"
+        type="password"
+        class="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 border-solid border outline-none"
+        [ngClass]="{
+          'border-red-500': userForm.controls.password.invalid,
+          'border-black': !userForm.controls.password.invalid
+        }"
+      />
+    </div>
+    <div class="w-full h-[12%]">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+        Confirm password
+      </label>
+      <input
+        formControlName="confirm"
+        placeholder="Confirm Password"
+        type="password"
+        class="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 border-solid border outline-none"
+        [ngClass]="{
+          'border-red-500': userForm.controls.confirm.invalid,
+          'border-black': !userForm.controls.confirm.invalid
+        }"
+      />
+    </div>
+    <div class="w-full h-[12%]">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+        Full name
+      </label>
+      <input
+        formControlName="name"
+        placeholder="Name"
+        class="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 border-solid border outline-none"
+        [ngClass]="{
+          'border-red-500': userForm.controls.name.invalid,
+          'border-black': !userForm.controls.name.invalid
+        }"
+      />
+    </div>
+    <div class="w-full h-[12%]">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+        Email
+      </label>
+      <input
+        formControlName="email"
+        placeholder="Email"
+        class="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 border-solid border outline-none"
+        [ngClass]="{
+          'border-red-500': userForm.controls.email.invalid,
+          'border-black': !userForm.controls.email.invalid
+        }"
+      />
+    </div>
+    <div class="w-full h-[12%]">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+        Role
+      </label>
+      <input
+        formControlName="role"
+        placeholder="Role"
+        class="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 border-solid border outline-none"
+        [ngClass]="{
+          'border-red-500': userForm.controls.role.invalid,
+          'border-black': !userForm.controls.role.invalid
+        }"
+      />
+    </div>
+    <div class="w-full h-[12%]">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+        Position
+      </label>
+      <input
+        formControlName="position"
+        placeholder="Position"
+        class="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 border-solid border outline-none"
+        [ngClass]="{
+          'border-red-500': userForm.controls.position.invalid,
+          'border-black': !userForm.controls.position.invalid
+        }"
+      />
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+</div>
