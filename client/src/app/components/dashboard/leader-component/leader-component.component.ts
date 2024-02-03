@@ -44,7 +44,7 @@ export class LeaderComponentComponent implements OnInit {
     this.apiService.fetchTaskProcess('complete').then(res => {
         const detail = res.data[0].detail
         this.percentProject = detail.length === 0 ? 0 : (detail.filter((e:any) => e.status === 'complete').length / res.data[0].totalTask) * 100
-        console.log(detail.length === 0 ? 0 : (detail.filter((e:any) => e.status === 'complete').length / res.data[0].totalTask) * 100)
+        /* console.log(detail.length === 0 ? 0 : (detail.filter((e:any) => e.status === 'complete').length / res.data[0].totalTask) * 100) */
       }
     )
     this.apiService.fetchProjectByStatus('complete').then(res => {
