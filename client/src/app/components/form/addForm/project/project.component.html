@@ -1,0 +1,165 @@
+<div
+      *ngIf="data.isForm"
+      class="w-[50vw] h-[95vh] fixed inset-0 top-2 z-50 mx-auto flex items-center justify-center"
+    >
+    <div (click)="changeForm.emit(false);"
+    class="fixed inset-0 z-40 bg-black bg-opacity-50"></div>
+  <div class="w-[50vw] h-[90vh] 3xl:h-[70vh] fixed inset-0 top-2 z-50 m-auto flex items-center justify-center">
+      <div class="bg-white p-4 rounded shadow-lg w-full h-full">
+        <div class="w-full h-full flex flex-wrap justify-around items-center">
+          <div class="mb-2 w-full h-[10%]">
+            <label
+              class="block text-gray-700 text-sm font-bold mb-2"
+              for="projectName"
+            >
+              Project Name
+            </label>
+            <input
+              #projectName
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              name="projectName"
+              id="projectName"
+              type="text"
+              placeholder="Project Name"
+            />
+          </div>
+          <div class="mb-2 w-full h-[10%] flex flex-wrap justify-between">
+            <div class="w-[48%]">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="dateOfStart"
+              >
+                Date of Start
+              </label>
+              <input
+                #dateOfStart
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                name="dateOfStart"
+                id="dateOfStart"
+                type="date"
+                placeholder=""
+              />
+            </div>
+
+            <div class="w-[48%]">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="dateEnd"
+              >
+                Date of End
+              </label>
+              <input
+                #dateEnd
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                name="dateEnd"
+                id="dateOfStart"
+                type="date"
+                placeholder=""
+              />
+            </div>
+          </div>
+          <div class="mb-2 w-full h-[10%] flex justify-between">
+            <div class="w-[14%]">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="teamSize"
+              >
+                Team size
+              </label>
+              <input
+                #teamSize
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                name="teamSize"
+                id="teamSize"
+                type="number"
+                placeholder="Team size"
+              />
+            </div>
+
+            <div class="w-[70%]">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="expense"
+              >
+                Expense
+              </label>
+              <input
+                #expense
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                name="expense"
+                id="expense"
+                type="number"
+                placeholder="Expense"
+              />
+            </div>
+            <div class="w-[14%]">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="task"
+              >
+                Total task
+              </label>
+              <input
+                #task
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                name="task"
+                id="task"
+                type="number"
+                placeholder="Total task"
+              />
+            </div>
+          </div>
+          <div class="team mb-2 h-[60%] flex flex-wrap justify-around items-start content-start gap-3">
+            <label
+              class="block w-full h-[5%] text-gray-700 text-sm font-bold mb-2"
+              for="teamSize"
+            >
+              Team
+            </label>
+            <div
+              class="detail w-[25%] h-[30px] m-2 text-white rounded-lg cursor-pointer"
+              *ngFor="let s of staff"
+              [ngClass]="{
+                'bg-blue-500 ': listStaff.includes(s.idUser),
+                'bg-slate-500': !listStaff.includes(s.idUser)
+              }"
+            >
+              <label
+                class="w-full h-full flex items-center justify-center cursor-pointer"
+              >
+                {{ s.name }} - {{ s.position }}
+                <input
+                  type="checkbox"
+                  class="hidden"
+                  (click)="addStaff(s.idUser)"
+                />
+              </label>
+            </div>
+          </div>
+          <div class="w-full h-[5%] flex items-center justify-between">
+            <button
+              (click)="
+                onSubmit({
+                  name: projectName.value,
+                  startDate: dateOfStart.value,
+                  endDate: dateEnd.value,
+                  teamSize: teamSize.value,
+                  expense: expense.value,
+                  totalTask: task.value
+                })
+              "
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="submit"
+            >
+              Submit
+            </button>
+            <button
+              class="text-red-500 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              (click)="changeForm.emit(false)"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
