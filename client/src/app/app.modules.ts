@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+/* import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppComponent } from './app/app.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -11,3 +11,4 @@ import { ReactiveFormsModule } from '@angular/forms';
   declarations: [AppComponent]
 })
 export class AppModule { }
+ */

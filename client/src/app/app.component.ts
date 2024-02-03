@@ -29,7 +29,11 @@ export class AppComponent implements OnInit {
       return
     }
     this.apiService.fetchAutoUpdateStatus().then(res => console.log(res.message))
-    this.apiService.fetchProject().then(res => console.log(res))
+    this.apiService.fetchProject().then(res => {
+      if(res.status === 200){
+        this.globalService.changeProject(res.data)
+      }
+    })
     this.apiService.fetchInfo(this.globalService.token).then(async(res) => {
       if(res.status === 200){
         this.globalService.changeInfo(res.data);
