@@ -1,47 +1,32 @@
 import { Component,OnInit  } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { Global } from '../../../service/global.service';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
 export class HeaderComponent implements OnInit  {
-  pathname = window.location.href.split('/')[3];
-
+  isLogin = this.global.getValueLocal('isLogin');
+  role:string = ''
+  constructor(private router: Router,private global:Global) {
+  }
+  pathName:string = window.location.href.split('/')[3];
   ngOnInit(): void {
-    // Chạy các hàm khi tải trang lần đầu
-    this.checkPathname(this.pathname);
-  }
-  constructor(private router: Router) {
-  }
-  checkPathname(path:string){
-    switch(path){
-      case "":
-        document.querySelectorAll('.navContent').forEach(e => {
-          e.classList.remove('bg-blue-500','text-white')
-        })
-        document.getElementById('home')?.classList.add("bg-blue-500","text-white");
-        break;
-      case "project":
-        document.querySelectorAll('.navContent').forEach(e => {
-          e.classList.remove('bg-blue-500','text-white')
-        })
-        document.getElementById('project')?.classList.add("bg-blue-500","text-white");
-        break;
-        case "contact":
-          document.querySelectorAll('.navContent').forEach(e => {
-            e.classList.remove('bg-blue-500','text-white')
-          })
-          document.getElementById('contact')?.classList.add("bg-blue-500","text-white");
-          break;
-    }
   }
   navigateToDynamicPage(pageName: string) {
     this.router.navigate([pageName]);
-    this.checkPathname(pageName)
+    this.pathName = pageName
+  }
+  handleLog(){
+    if(this.isLogin){
+      this.global.isLogin = false
+      localStorage.clear()
+      window.location.href="/login"
+    }
   }
   
 }

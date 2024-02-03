@@ -1,26 +1,53 @@
-<header class="w-[95vw] h-[10vh] mx-auto">
-  <nav class="w-2/4 h-full flex justify-around items-center">
+<header
+  class="w-full h-[7vh] mx-auto flex justify-around items-center bg-gray-900"
+>
+  <nav class="w-1/4 h-full flex justify-evenly items-center" *ngIf="role !== 'admin'">
     <div
       id="home"
-      class="navContent w-1/4 h-2/5 flex justify-center items-center cursor-pointer hover:bg-blue-500 hover:text-white rounded-lg transition-all"
+      [ngClass]="{'bg-slate-500':pathName === '','bg-transparent':pathName !== ''}"
+      class="navContent w-[30%] h-2/5 flex justify-center items-center cursor-pointer hover:bg-slate-500 text-white hover:text-white rounded-lg transition-all"
       (click)="navigateToDynamicPage('')"
     >
       Dashboard
     </div>
     <div
       id="project"
-      class="navContent w-1/4 h-2/5 flex justify-center items-center cursor-pointer hover:bg-blue-500 hover:text-white rounded-lg transition-all"
+      [ngClass]="{'bg-slate-500':pathName === 'project','bg-transparent':pathName !== 'project'}"
+      class="navContent w-[30%] h-2/5 flex justify-center items-center cursor-pointer hover:bg-slate-500 text-white hover:text-white rounded-lg transition-all"
       (click)="navigateToDynamicPage('project')"
     >
       Project
     </div>
     <div
       id="contact"
-      class="navContent w-1/4 h-2/5 flex justify-center items-center cursor-pointer hover:bg-blue-500 hover:text-white rounded-lg transition-all"
+      [ngClass]="{'bg-slate-500':pathName === 'contact','bg-transparent':pathName !== 'contact'}"
+      class="navContent w-[30%] h-2/5 flex justify-center items-center cursor-pointer hover:bg-slate-500 text-white hover:text-white rounded-lg transition-all"
       (click)="navigateToDynamicPage('contact')"
     >
       Contact
     </div>
   </nav>
-  <div class="search"></div>
+
+  <div id="search-bar" class="w-1/4 bg-white rounded-md shadow-lg z-10">
+    <form class="flex items-center justify-center p-2">
+      <input
+        type="text"
+        placeholder="Search here"
+        class="w-full rounded-md px-2 py-1 outline-none"
+      />
+      <button
+        type="submit"
+        class="bg-gray-800 text-white rounded-md px-4 py-1 ml-2 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
+      >
+        Search
+      </button>
+    </form>
+  </div>
+
+  <button
+    (click)="handleLog()"
+    class="bg-slate-700 hover:bg-slate-600 h-[30px] w-[100px] rounded-lg text-white font-bold transition-all"
+  >
+    {{ isLogin ? "Logout" : "Login" }}
+  </button>
 </header>
