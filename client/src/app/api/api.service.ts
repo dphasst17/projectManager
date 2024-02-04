@@ -74,6 +74,16 @@ export class ApiService {
       }
     }).then(res => res.json())
   }
+
+  fetchDeleteProject = async(idProject:number) => {
+    return fetch(`${environment.apiUrl}/api/project/`,{
+      method:'DELETE',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({idProject:idProject})
+    }).then(res => res.json())
+  }
   /* All fetch auth */
 
   fetchLogin = async(data:any) => {
