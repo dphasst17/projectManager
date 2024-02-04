@@ -45,19 +45,19 @@ export class ProjectComponent implements OnInit{
     }
 
     if(Object.keys(input).every((e: keyof typeof input) => input[e] !== '')) {
-      const result = {
-        ...input,
-        idProject:this.data.project.length + 1,
-        spent:0,
-        startDate:new Date(input.startDate).toLocaleDateString(),
-        endDate:new Date(input.endDate).toLocaleDateString(),
-        projectStatus:"hasn't started"
-      }
       const resultData = {
         ...input,
         detail:this.staff.filter((f:any) => this.listStaff.includes(f.idUser)).map((e:any) => {return{idUser:e.idUser,role:e.position}})
       }
       this.apiService.fetchCreateProject(resultData).then(res => {
+        const result = {
+          ...input,
+          idProject:res.data.idProject,
+          spent:0,
+          startDate:new Date(input.startDate).toLocaleDateString(),
+          endDate:new Date(input.endDate).toLocaleDateString(),
+          projectStatus:"hasn't started"
+        }
         if(res.status === 201){
           this.changeProject.emit ([...this.data.project,result])
           this.global.changeProject([...this.data.project,result])
