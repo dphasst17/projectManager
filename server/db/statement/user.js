@@ -1,6 +1,10 @@
 export const insertUser = (props) => {
-    const sql = `INSERT INTO info(idUser,name,phone,email,address,area)VALUES
-    ('${props.idUser}','${props.name}','${props.phone}','${props.email}','${props.address}','${props.area}');`
+    const sql = `INSERT INTO info(idUser,name,email)VALUES
+    ('${props.idUser}','${props.name}','${props.email}');`
+    return sql;
+}
+export const insertUserPosition = (idUser,position) => {
+    const sql = `INSERT INTO positions(idUser,positionDetail) VALUES('${idUser}','${position}');`;
     return sql;
 }
 export const getUser = (idUser) => {
@@ -23,7 +27,15 @@ export const updateUser = (idUser,data) => {
     const sql = `UPDATE info SET name = '${data.name}',phone = '${data.phone}',email = '${data.email}',address = '${data.address}',area = '${data.area}' WHERE  idUser = '${idUser}'`;
     return sql;
 }
-export const getAll = () => {
-    const sql = `SELECT i.idUser,i.name,i.email,i.area,a.role FROM info i LEFT JOIN auth a ON i.idUser = a.idUser WHERE i.idUser != 'leader'`
+export const updateAction = (idUser,newAction) => {
+    const sql = `UPDATE info SET action = '${newAction}' WHERE idUser = '${idUser}';`;
+    return sql;
+}
+export const getStaff = () => {
+    const sql = `SELECT i.idUser,i.name,i.email,i.area,a.role,p.positionDetail AS position,i.action
+    FROM info i 
+    LEFT JOIN auth a ON i.idUser = a.idUser 
+    LEFT JOIN positions p ON i.idUser = p.idUser
+    `
     return sql
 }

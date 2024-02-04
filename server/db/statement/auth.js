@@ -12,7 +12,7 @@ export const checkUser = (username,email) => {
     return sql;
 }
 export const checkRole = (idUser,role) => {
-    const sql = `SELECT role FROM auth WHERE role = '${idUser}' AND role = '${role}';`;
+    const sql = `SELECT role FROM auth WHERE idUser = '${idUser}' AND role = '${role}';`;
     return sql;
 }
 export const updatePassword = (idUser,newPass) => {
