@@ -3,6 +3,7 @@ import * as sqlQuery from "../../db/statement/project.js"
 import { poolConnectDB } from "../../db/db.js";
 import * as response from "../../utils/handle.js"
 import * as message from "../../utils/message.js"
+import * as middle from "../../middleware/index.js"
 const router = express.Router();
 const pool = poolConnectDB()
 router.get('/',(req,res) => {
@@ -41,10 +42,13 @@ router.get('/filter/:year',(req,res) => {
 router.post('/update/status/auto',(req,res) => {
     const currentDate = new Date().toLocaleDateString().split("/").reverse().join("-")
     const sql = sqlQuery.updateStatusProjectByDate(currentDate)
+    const sqlTask = sqlQuery.updateStatusTaskByDate(currentDate)
     pool.query(sql,(err,results) => {
         response.errResponseMessage(res,err,500,message.err500Message())
-
-        response.successResponseMessage(res,200,message.updateItemsMessage('status in project'))
+        pool.query(sqlTask,(errTask,resultsTask) => {
+            response.errResponseMessage(res,errTask,500,message.err500Message())
+            response.successResponseMessage(res,200,message.updateItemsMessage('project status and task status'))
+        })
     })
 })
 router.get('/status/:statusProject',(req,res) => {
@@ -71,25 +75,42 @@ router.get('/status/:statusProject',(req,res) => {
         response.successResponseData(res,200,parseData)
     })
 })
-router.get('/detail/:idProject',(req,res) => {
-    const idProject = req.params['idProject']
-    const sql = sqlQuery.getProjectDetail(idProject)
+router.get('/id/:id',(req,res) => {
+    const id = req.params['id']
+    const sql = sqlQuery.getProjectById(id);
     pool.query(sql,(err,results) => {
         response.errResponseMessage(res,err,500,message.err500Message())
-        const parseData = results.map(e => {return {
-            ...e,
-            startDate:response.formatDate(e.startDate),
-            endDate:response.formatDate(e.endDate),
-            teamDetail:JSON.parse(e.teamDetail),
-            task:JSON.parse(e.task).map(t => {
-                return {
-                    ...t,
-                    end:response.formatDate(t.end),
-                    start:response.formatDate(t.start),
-                    finish:response.formatDate(t.finish)
-                }
-            })
-        }})
+        const parseData = results.map(e => {
+            const task = JSON.parse(e.task)
+            const team = JSON.parse(e.teamDetail)
+            return {
+                ...e,
+                startDate:response.formatDate(e.startDate),
+                endDate:response.formatDate(e.endDate),
+                task: task === null ? [] : task.map(e => {return{
+                    ...e,
+                    start:response.formatDate(e.start),
+                    end:response.formatDate(e.end),
+                    finish:response.formatDate(e.finish),
+                }}),
+                teamDetail:team === null ? [] : team,
+            }
+        })
+        response.successResponseData(res,200,parseData)
+    })
+})
+router.post('/staff',middle.verify,(req,res) => {
+    const idUser = req.idUser
+    const sql = sqlQuery.getProjectByStaff(idUser)
+    pool.query(sql,(err,results) => {
+        response.errResponseMessage(res,err,500,message.err500Message())
+        const parseData = results.map(e => {
+            return {
+                ...e,
+                startDate:response.formatDate(e.startDate),
+                endDate:response.formatDate(e.endDate),
+            }
+        })
         response.successResponseData(res,200,parseData)
     })
 })
@@ -122,7 +143,40 @@ router.get('/task/status/:statusDetail',(req,res) => {
         response.successResponseData(res,200,parseDate)
     })
 })
-/* {name:name,start:startDate,end:endDate,expense:expense,teamSize:teamSize,totalTask:totalTask,detail:[{idUser:user1,role:role1}]} */
+router.post('/task/todo',middle.verify,middle.handleRoleAdmin,(req,res) => {
+    const sql = sqlQuery.getTaskToDo()
+    pool.query(sql,(err,results) => {
+        response.errResponseMessage(res,err,500,message.err500Message())
+
+        const parseDate = results.map(e => {
+            /* const parseDetail = JSON.parse(e.detail) */
+            return {
+                ...e,
+                startDate:response.formatDate(e.startDate),
+                endDate:response.formatDate(e.endDate)
+            }
+        })
+        response.successResponseData(res,200,parseDate)
+    })
+})
+router.post('/task/todo/staff',middle.verify,(req,res) => {
+    const idUser = req.idUser
+    const sql = sqlQuery.staffGetTaskTodo(idUser)
+    pool.query(sql,(err,results) => {
+        response.errResponseMessage(res,err,500,message.err500Message())
+
+        const parseDate = results.map(e => {
+            return {
+                ...e,
+                startDate:response.formatDate(e.startDate),
+                endDate:response.formatDate(e.endDate)
+            }
+        })
+        response.successResponseData(res,200,parseDate)
+    })
+})
+/* {name:name,start:startDate,end:endDate,expense:expense,teamSize:teamSize,totalTask:totalTask,
+    detail:[{idUser:user1,role:role1}]} */
 router.post('/create',(req,res) => {
     const data = req.body;
     const sql = sqlQuery.insertProject(data);
@@ -130,9 +184,9 @@ router.post('/create',(req,res) => {
         response.errResponseMessage(res,err,500,message.err500Message());
         const resultId = results.insertId
         const sqlDetail = sqlQuery.insertProjectDetail(resultId,data.detail)
-        pool.query(sqlDetail,(errDetail,resultsDetail) => {
+        pool.query(sqlDetail,(errDetail,resultsDetail) => { 
             response.errResponseMessage(res,errDetail,500,message.err500Message());
-            response.successResponseMessage(res,201,message.createItemsMessage('project'))
+            response.successResponseMessageAndData(res,201,message.createItemsMessage('project'),{idProject:resultId})
         })
     })
 
@@ -144,6 +198,19 @@ router.post('/create/task',(req,res) => {
     pool.query(sql,(err,results) => {
         response.errResponseMessage(res,err,500,message.err500Message());
         response.successResponseMessage(res,201,message.createItemsMessage('task'))
+    })
+})
+router.delete('/',(req,res) => {
+    const data = req.body
+    const idProject = data.idProject;
+    const sqlProject = sqlQuery.deleteProject(idProject);
+    const sqlProjectDetail = sqlQuery.deleteProjectDetail(idProject);
+    pool.query(sqlProjectDetail,(errDetail,resultDetail) => {
+        response.errResponseMessage(res,errDetail,500,message.err500Message());
+        pool.query(sqlProject,(err,results) => {
+            response.errResponseMessage(res,err,500,message.err500Message());
+            response.successResponseMessage(res,200,message.removeItemsMessage('project'))
+        })
     })
 })
 
