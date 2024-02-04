@@ -25,7 +25,9 @@ export const handleRoleAdmin = (req,res,next) => {
         }
         
         if(result.length === 0){
-            res.status(403).json({message:'You do not have sufficient permissions to access this resource'})
+            console.log(result)
+            console.log(sql)
+            res.status(403).json({status:403,message:'You do not have sufficient permissions to access this resource'})
             return;
         }
         next()
