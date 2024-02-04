@@ -37,7 +37,6 @@ export class ViewProjectComponent implements OnInit {
       }
     }else{
       this.global.currentProject.subscribe(p => this.project = p)
-      /* this.global.currentProject.subscribe(p => console.log(p)) */
     }
   }
   changeModal(event: boolean) {
@@ -58,5 +57,17 @@ export class ViewProjectComponent implements OnInit {
   }
   setCurrentProject(id:any){
     this.apiService.fetchProjectById(id).then(res => this.currentProject = res.data)
+  }
+  handleDelete(idProject:number){
+    console.log(idProject)
+    console.log(this.project.filter((f:any) => f.idProject !== idProject))
+    this.apiService.fetchDeleteProject(idProject).then(res => {
+      if(res.status === 200){
+        const result = this.project.filter((f:any) => f.idProject !== idProject)
+        this.global.changeProject(result)
+        this.project = result
+      }
+      alert(res.message)
+    })
   }
 }
