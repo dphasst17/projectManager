@@ -100,13 +100,27 @@ router.post('/login', (req, res) => {
 router.post('/password',verify,(req,res) => {
     const data = req.body
     const idUser = req.idUser;
-    const newPass = data.password;
+    const currentPass = data.current
+    const newPass = data.new;
     const pass_hash = encodePass(newPass)
     const sql = sqlQuery.updatePassword(idUser,pass_hash);
-    pool.query(sql,(err,results) => {
-        response.errResponseMessage(res,err,500,message.err500Message())
+    const sqlCheck = sqlQuery.checkPassword(idUser);
+    let isPassword;
+    pool.query(sqlCheck,(errCheck,resultCheck) => {
+        response.errResponseMessage(res,errCheck,500,message.err500Message())
+        const pass_hash = resultCheck.map(e => e.password).toString()
+        isPassword = bcrypt.compareSync(currentPass, pass_hash);
 
-        response.successResponseMessage(res,200,'Set new password is success')
+        if (!isPassword) {
+            response.successResponseMessage(res,401,'Incorrect password')
+            return
+        }
+
+        pool.query(sql,(err,results) => {
+            response.errResponseMessage(res,err,500,message.err500Message())
+    
+            response.successResponseMessage(res,200,'Update password is success')
+        })
     })
 })
 router.post('/forgot', (req, res) => {

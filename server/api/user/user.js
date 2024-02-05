@@ -33,7 +33,7 @@ router.post('/info',verify,(req,res) => {
 router.put('/update',verify,(req,res) => {
     const idUser = req.idUser;
     const data = req.body;
-    const sql = sqlQuery.updateUser(idUser,data);
+    const sql = sqlQuery.updateUser(false,idUser,data);
     pool.query(sql,(err,results) => {
         response.errResponseMessage(res,err,message.err500Message())
 

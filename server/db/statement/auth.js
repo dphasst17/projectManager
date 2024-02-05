@@ -15,6 +15,10 @@ export const checkRole = (idUser,role) => {
     const sql = `SELECT role FROM auth WHERE idUser = '${idUser}' AND role = '${role}';`;
     return sql;
 }
+export const checkPassword = (idUser) => {
+    const sql = `SELECT password FROM auth WHERE idUser = '${idUser}'`;
+    return sql
+}
 export const updatePassword = (idUser,newPass) => {
     const sql = `UPDATE auth SET password = '${newPass}' WHERE idUser = '${idUser}';`
     return sql;

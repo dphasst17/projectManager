@@ -23,8 +23,10 @@ export const getUser = (idUser) => {
     WHERE i.idUser = '${idUser}'`;
     return sql;
 }
-export const updateUser = (idUser,data) => {
-    const sql = `UPDATE info SET name = '${data.name}',phone = '${data.phone}',email = '${data.email}',address = '${data.address}',area = '${data.area}' WHERE  idUser = '${idUser}'`;
+export const updateUser = (isAdmin,idUser,data) => {
+    const result = isAdmin === true ? `area = '${data.area}'` 
+        : `name = '${data.name}',phone = '${data.phone}',email = '${data.email}',address = '${data.address}'`
+    const sql = `UPDATE info SET ${result} WHERE  idUser = '${idUser}'`;
     return sql;
 }
 export const updateAction = (idUser,newAction) => {
