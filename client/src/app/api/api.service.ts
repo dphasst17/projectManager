@@ -37,6 +37,25 @@ export class ApiService {
   fetchProject = async() => {
     return fetch(`${environment.apiUrl}/api/project`).then(res => res.json());
   }
+  
+  fetchCreateProject = async (data:any) => {
+    return fetch(`${environment.apiUrl}/api/project/create`,{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify(data)
+    }).then(res => res.json())
+  }
+  fetchCreateTask = async (idProject:any,detail:any[]) => {
+    return fetch(`${environment.apiUrl}/api/project/create/task`,{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({idProject,detail})
+    }).then(res => res.json())
+  }
 
   fetchProjectByStaff = async(token:string) => {
     return fetch(`${environment.apiUrl}/api/project/staff`,{
@@ -105,7 +124,16 @@ export class ApiService {
       body:JSON.stringify(data)
     }).then(res => res.json())
   }
-
+  fetchUpdatePassword = async(token:string,data:any) => {
+    return fetch(`${environment.apiUrl}/auth/password`,{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':`Bearer ${token}`
+      },
+      body:JSON.stringify(data)
+    }).then(res => res.json())
+  }
   /* All fetch user */
 
   fetchInfo = async(token:any) => {
@@ -115,6 +143,16 @@ export class ApiService {
         'Content-Type':'application/json',
         'Authorization':`Bearer ${token}`
       }
+    }).then(res => res.json())
+  }
+  fetchUpdateUser = async(token:string,data:any) => {
+    return fetch(`${environment.apiUrl}/user/update`,{
+      method:'PUT',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':`Bearer ${token}`
+      },
+      body:JSON.stringify(data)
     }).then(res => res.json())
   }
   fetchStaff = async() => {
@@ -130,22 +168,5 @@ export class ApiService {
       body:JSON.stringify(data)
     }).then(res => res.json())
   }
-  fetchCreateProject = async (data:any) => {
-    return fetch(`${environment.apiUrl}/api/project/create`,{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify(data)
-    }).then(res => res.json())
-  }
-  fetchCreateTask = async (idProject:any,detail:any[]) => {
-    return fetch(`${environment.apiUrl}/api/project/create/task`,{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify({idProject,detail})
-    }).then(res => res.json())
-  }
+  
 }
