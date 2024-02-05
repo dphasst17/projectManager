@@ -86,7 +86,7 @@ router.post('/login', (req, res) => {
             isPassword = bcrypt.compareSync(password, pass_hash);
 
             if (!isPassword) {
-                res.status(401).json({status:401,message:"Incorrect Password"})
+                response.successResponseMessage(res,401,'Incorrect password')
                 return
             }
             const idUser = results.map(e => e.idUser).toString()
