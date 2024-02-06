@@ -15,7 +15,6 @@ export class DetailComponent implements OnInit{
   constructor(private global:Global, private apiService: ApiService){}
   staff:any = []
   ngOnInit(): void {
-    console.log(this.data)
   }
 
   formatDate(date:any){
