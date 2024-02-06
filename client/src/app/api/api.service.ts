@@ -67,10 +67,6 @@ export class ApiService {
     }).then(res => res.json());
   }
 
-  fetchTaskProcess = async(status:string) => {
-    return fetch(`${environment.apiUrl}/api/project/task/status/${status}`).then(res => res.json())
-  }
-
   fetchProjectByStatus = async(status:string) => {
     return fetch(`${environment.apiUrl}/api/project/status/${status}`).then(res => res.json())
   }
@@ -93,7 +89,18 @@ export class ApiService {
       }
     }).then(res => res.json())
   }
-
+  fetchConfirmTask = async(idTask:number,obj:any) => {
+    return fetch(`${environment.apiUrl}/api/project/task/update`,{
+      method:'PATCH',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({idTask:idTask,object:obj})
+    }).then(res => res.json())
+  }
+  fetchTaskByStatus = async(status:string) => {
+    return fetch(`${environment.apiUrl}/api/project/task/status/${status}`).then(res => res.json())
+  }
   fetchDeleteProject = async(idProject:number) => {
     return fetch(`${environment.apiUrl}/api/project/`,{
       method:'DELETE',
