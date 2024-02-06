@@ -1,6 +1,8 @@
 export const getAllProject = (filter) => {
-    const sql = `SELECT idProject,name,startDate,endDate,expense,spent,teamSize,totalTask,projectStatus 
-    FROM project ${filter?.isFil === true ? `WHERE endDate LIKE '${filter.year}%'` : ''}`;
+    const sql = `SELECT project.idProject,project.name,project.startDate,project.endDate,expense,spent,teamSize,totalTask,projectStatus,
+    COUNT(task.idTask) AS taskCreated 
+    FROM project LEFT JOIN task on project.idProject = task.idProject ${filter?.isFil === true ? `WHERE endDate LIKE '${filter.year}%'` : ''} 
+    GROUP BY task.idProject;`;
     return sql;
 }
 export const getProjectByStatus = (status) => {
@@ -54,8 +56,8 @@ export const getTaskDetail = (idProject) => {
 }
 
 export const getTaskByStatus = (status) => {
-    const sql = `SELECT p.idProject,p.totalTask,
-    CONCAT('[',GROUP_CONCAT(JSON_OBJECT('assignedTo',t.assignedTo,'nameStaff',i.name,'name',t.name,'description',t.description,'start',t.startDate,'endDate',t.endDate,'finishDate',t.finishDate,'status',t.status)),']')AS detail 
+    const sql = `SELECT p.idProject,p.name,p.totalTask,
+    CONCAT('[',GROUP_CONCAT(JSON_OBJECT('idTask',t.idTask,'assignedTo',t.assignedTo,'nameStaff',i.name,'name',t.name,'description',t.description,'start',t.startDate,'endDate',t.endDate,'finishDate',t.finishDate,'status',t.status,'confirm',t.confirm)),']')AS detail 
     FROM project p 
     LEFT JOIN task t ON p.idProject = t.idProject 
     LEFT JOIN info i ON i.idUser = t.assignedTo
@@ -70,7 +72,7 @@ export const getTaskToDo = () => {
     return sql
 }
 export const staffGetTaskTodo = (idUser) => {
-    const sql = `SELECT p.idProject,t.name,t.description,t.startDate,t.endDate,t.assignedTo,t.status
+    const sql = `SELECT p.idProject,t.idTask,t.name,t.description,t.startDate,t.endDate,t.assignedTo,t.status,t.confirm
     FROM project p 
     LEFT JOIN task t ON p.idProject = t.idProject 
     WHERE status = 'processing' and t.assignedTo = '${idUser}'`
@@ -100,8 +102,9 @@ export const insertTask = (idProject,data) => {
      VALUES ${parse}`;
      return sql;
 }
-export const updateStatusTask = (idTask,status) => {
-    const sql = `UPDATE task SET status = '${status}' WHERE idTask = ${idTask};`
+export const updateStatusTask = (idTask,obj) => {
+    const result = obj.isBoth ? `status = 'complete', confirm = 'false'` : `confirm = '${obj.confirmValue}'`
+	const sql = `UPDATE task SET ${result} WHERE idTask = ${idTask}`
     return sql;
 }
 

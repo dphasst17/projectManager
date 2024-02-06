@@ -149,7 +149,6 @@ router.post('/task/todo',middle.verify,middle.handleRoleAdmin,(req,res) => {
         response.errResponseMessage(res,err,500,message.err500Message())
 
         const parseDate = results.map(e => {
-            /* const parseDetail = JSON.parse(e.detail) */
             return {
                 ...e,
                 startDate:response.formatDate(e.startDate),
@@ -173,6 +172,14 @@ router.post('/task/todo/staff',middle.verify,(req,res) => {
             }
         })
         response.successResponseData(res,200,parseDate)
+    })
+})
+router.patch('/task/update',(req,res) => {
+    const data = req.body;
+    const sql = sqlQuery.updateStatusTask(data.idTask,data.object)
+    pool.query(sql,(err,result) => {
+        response.errResponseMessage(res,err,500,message.err500Message())
+        response.successResponseMessage(res,200,message.updateItemsMessage('task'))
     })
 })
 /* {name:name,start:startDate,end:endDate,expense:expense,teamSize:teamSize,totalTask:totalTask,
