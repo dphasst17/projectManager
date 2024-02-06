@@ -94,7 +94,7 @@
               scope="row"
               class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
             >
-            Còn lại
+            Remain
             </th>
             <td class="px-6 py-4">{{(projectProcess.expense - projectProcess.spent).toLocaleString('vi-VN')}}</td>
           </tr>
@@ -116,42 +116,22 @@
         >
           <tr>
             <th scope="col" class="px-6 py-3 ">Area</th>
-            <th scope="col" class="px-6 py-3">Quantity</th>
+            <th scope="col" class="px-6 py-3">Total</th>
             <th scope="col" class="px-6 py-3 ">
-              Staff on break
+              Break
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr class="bg-white">
+          <tr class="bg-white" *ngFor="let a of statisticsArea">
             <th
               scope="row"
               class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
             >
-              East
+              {{a.area.toLocaleUpperCase()}}
             </th>
-            <td class="px-6 py-4">1</td>
-            <td class="px-6 py-4">4</td>
-          </tr>
-          <tr class="bg-white">
-            <th
-              scope="row"
-              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-            >
-              west
-            </th>
-            <td class="px-6 py-4">1</td>
-            <td class="px-6 py-4">5</td>
-          </tr>
-          <tr class="bg-white">
-            <th
-              scope="row"
-              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-            >
-              south
-            </th>
-            <td class="px-6 py-4">1</td>
-            <td class="px-6 py-4">4</td>
+            <td class="px-6 py-4">{{a.total}}</td>
+            <td class="px-6 py-4">{{a.break}}</td>
           </tr>
         </tbody>
 
@@ -163,10 +143,11 @@
       Member
     </h1>
     <div class="md:flex flex-wrap justify-center">
-      <div class="w-full h-auto rounded-md flex flex-wrap items-center justify-center my-2 cursor-pointer" *ngFor="let area of dataArea" (click)="filterArea(area)">
-        <div [ngClass]="{'bg-blue-700' : currentArea === area}" class="w-full h-[30px] rounded-md flex items-center justify-center bg-slate-500 text-white font-bold my-2 transition-all">{{area.toLocaleUpperCase()}}</div>
-        <div class="detail" [ngClass]="{'w-full': currentArea === area,'w-0 hidden':currentArea !== area}" class='h-auto bg-slate-400 overflow-hidden transition-all rounded-md'>
-          <div id={{area}} *ngFor="let data of dataFilter" 
+      <div class="w-full h-auto rounded-md flex flex-wrap items-center justify-center my-2 cursor-pointer" *ngFor="let a of statisticsArea" (click)="filterArea(a.area)">
+        <div [ngClass]="{'bg-blue-700' : currentArea === a.area,'bg-slate-500':currentArea !== a.area}" class="w-full h-[30px] rounded-md flex items-center justify-center  text-white font-bold my-2 transition-all">{{a.area.toLocaleUpperCase()}}</div>
+        <div class="detail" [ngClass]="{'w-full': currentArea === a.area,'w-0 hidden':currentArea !== a.area}" 
+          class='h-auto bg-slate-400 overflow-hidden transition-all rounded-md'>
+          <div id={{a.area}} *ngFor="let data of a.detail" 
           class='w-full h-auto p-2 rounded-md'>
             <div class="w-full h-[20px] bg-blue-500 text-white text-[15px] font-bold rounded-sm my-1">
               #{{data.idUser}}
