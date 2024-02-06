@@ -17,5 +17,28 @@ export class StaffViewTaskComponent implements OnInit{
     this.apiService.fetchTaskTodoByStaff(this.global.token)
     .then(res => this.taskTodo = res.data)
   }
-
+  submitTask(idTask:number){
+    console.log(idTask)
+    const obj = {
+      isConfirm:true,
+      confirmValue:'true'
+    }
+    console.log(this.taskTodo.map((e:any) => {
+      return {
+        ...e,
+        confirm:e.idTask === idTask ? obj.confirmValue : e.confirm
+      }
+    }))
+    this.apiService.fetchConfirmTask(idTask,obj).then(res => {
+      alert(res.message)
+      if(res.status === 200){
+        this.taskTodo = this.taskTodo.map((e:any) => {
+          return {
+            ...e,
+            confirm:e.idTask === idTask ? obj.confirmValue : e.confirm
+          }
+        })
+      }
+    })
+  }
 }
