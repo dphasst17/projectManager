@@ -45,7 +45,7 @@
       <td class="border px-4 py-2">{{ p.totalTask }}</td>
       <td class="border px-4 py-2">{{ p.projectStatus }}</td>
       <td
-        *ngIf="position === 'PM' && p.projectStatus !== 'complete'"
+        *ngIf="position === 'PM' && p.projectStatus !== 'complete' && p.taskCreated?.length === 0"
         class="w-full py-2 flex justify-around items-center"
       >
         <button (click)="changeModalAddForm(true);setCurrentProject(p.idProject)" class="w-2/5 h-full bg-blue-600 text-white rounded-lg">
