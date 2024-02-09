@@ -65,7 +65,6 @@ export class ProjectComponent implements OnInit{
           this.listStaff = []
         }else{
           alert(res.message)
-          console.log(res.message)
         }
       })
     }

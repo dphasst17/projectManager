@@ -37,7 +37,6 @@ export class AdminComponent implements OnInit{
   ngOnInit(): void {
     this.global.currentProject.subscribe(p => this.project = p)
     this.global.currentStaff.subscribe(s => this.staff = s)
-    /* this.global.currentStaff.subscribe(s => console.log(s)) */
     this.apiService.fetchTaskTodo(this.global.token).then(res => {
       if(res.status === 200){
         this.pageTask = this.global.pagination(res.data.length,4)

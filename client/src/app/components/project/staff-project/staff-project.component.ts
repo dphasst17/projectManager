@@ -18,6 +18,7 @@ export class StaffProjectComponent implements OnInit {
   ngOnInit() {
     this.global.currentInfo.subscribe(i => this.position = i[0]?.position)
   }
+  //handleAddTask?
   onSubmit = (input:{taskname:string, description: string, project: string, assignedTo: string, priority: string, status: string}) => {
     document.getElementById('taskname')?.classList.add(input.taskname === "" ? 'border-red-500' : 'border-green-500')
     document.getElementById('description')?.classList.add(input.description === "" ? 'border-red-500' : 'border-green-500')
@@ -27,7 +28,6 @@ export class StaffProjectComponent implements OnInit {
     document.getElementById('status')?.classList.add(input.status === "" ? 'border-red-500' : 'border-green-500');
 
     if(input.taskname !== "" && input.description !== "" && input.project !== ""&& input.assignedTo !== ""&& input.priority !== ""&& input.status !== "") {
-      console.log(input)
       this.closeModal()
     }
   }

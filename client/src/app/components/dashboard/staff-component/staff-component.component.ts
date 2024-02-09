@@ -81,7 +81,6 @@ export class StaffComponentComponent implements OnInit {
         this.dataInfo = this.formEdit.value
       }
     })
-    console.log(this.formEdit.value)
   }
   onSubmitPassword(){
     const value = this.formPassword.value

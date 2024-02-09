@@ -51,8 +51,6 @@ export class TaskComponent implements OnInit{
         this.changeForm.emit(false)
       }
     })
-    console.log(listTask)
-    console.log(result)
   }
 }
 

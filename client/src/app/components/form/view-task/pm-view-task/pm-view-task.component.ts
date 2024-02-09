@@ -45,20 +45,6 @@ export class PmViewTaskComponent implements OnInit{
             })
           }
         })
-        console.log(
-          this.allTask.map((e:any) => {
-            return {
-              ...e,
-              detail:e.detail.map((d:any) => {
-                return {
-                  ...d,
-                  status:type === 'confirm' && d.idTask === idTask ? 'complete' : d.status,
-                  confirm:d.idTask === idTask ? 'false':  d.confirm
-                }
-              })
-            }
-          })
-        )
       }
     })
   }

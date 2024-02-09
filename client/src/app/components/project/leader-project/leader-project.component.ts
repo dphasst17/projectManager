@@ -34,7 +34,6 @@ export class LeaderProjectComponent implements OnInit {
 
   ngOnInit(): void {
     this.global.currentStaff.subscribe(data => this.staff = data)
-    /* this.global.currentStaff.subscribe(data => console.log(data)) */
     this.global.currentProject.subscribe(p => this.project = p)
   }
   constructor(private global:Global,private apiService: ApiService){}
@@ -59,10 +58,7 @@ export class LeaderProjectComponent implements OnInit {
         endDate:new Date(input.endDate).toLocaleDateString(),
         projectStatus:"hasn't started"
       }
-      console.log(result)
-      console.log(this.listStaff)
       this.global.changeProject([...this.project,result])
-      console.log(this.project)
       this.changeModal()
       this.listStaff = []
     }
@@ -86,7 +82,6 @@ export class LeaderProjectComponent implements OnInit {
         if(res.status === 200){
           this.projectDetail = res.data
           this.listStaffProject = res.data[0].teamDetail.flatMap((e:any) => e.staff)
-          /* console.log(res.data[0].teamDetail.flatMap((e:any) => e.staff)) */
         }
       })
     }

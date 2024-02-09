@@ -59,8 +59,6 @@ export class ViewProjectComponent implements OnInit {
     this.apiService.fetchProjectById(id).then(res => this.currentProject = res.data)
   }
   handleDelete(idProject:number){
-    console.log(idProject)
-    console.log(this.project.filter((f:any) => f.idProject !== idProject))
     this.apiService.fetchDeleteProject(idProject).then(res => {
       if(res.status === 200){
         const result = this.project.filter((f:any) => f.idProject !== idProject)
