@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer'
 import { OAuth2Client } from 'google-auth-library'
 import dotenv from "dotenv";
 dotenv.config();
+
 export const errResponseMessage = (res, err, status, message) => {
   if (err) {
     res.status(status).json({
@@ -17,6 +18,9 @@ export const successResponseMessage = (res, status, message) => {
 }
 export const successResponseData = (res, status, data) => {
   res.status(status).json({ status: status, data: data })
+}
+export const successResponseMessageAndData = (res, status,message, data) => {
+  res.status(status).json({ status: status, message:message, data: data })
 }
 export const formatDate = (date) => {
   return new Date(date).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
@@ -64,7 +68,7 @@ export const handleSendMail = (res, data) => {
         html: `<h3>${content}</h3>` // Nội dung email
       }
       await transport.sendMail(mailOptions)
-      res.status(200).json({ message: 'Email sent successfully.' })
+      res.status(200).json({status:200, message: 'Email sent successfully.' })
     } catch (error) {
       console.log(error)
       res.status(500).json({ errors: error.message })

@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { poolConnectDB } from "../db/db.js";
 import { checkRole } from "../db/statement/auth.js";
 const pool = poolConnectDB();
+
 export const verify  = (req,res,next) => {
     const authorizationHeader = req.headers["authorization"];
     if (!authorizationHeader) return res.sendStatus(401);
@@ -24,7 +25,9 @@ export const handleRoleAdmin = (req,res,next) => {
         }
         
         if(result.length === 0){
-            res.status(403).json({message:'You do not have sufficient permissions to access this resource'})
+            console.log(result)
+            console.log(sql)
+            res.status(403).json({status:403,message:'You do not have sufficient permissions to access this resource'})
             return;
         }
         next()

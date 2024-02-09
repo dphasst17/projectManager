@@ -1,0 +1,24 @@
+<div class="w-[95%] h-auto my-10">
+    <h1 class="font-bold my-2">All Task</h1>
+    <div class="taskTodo w-full h-auto flex flex-wrap">
+        <div class="w-full flex flex-wrap" *ngFor="let t of allTask">
+            <div class="w-full">#{{t.idProject}} - {{t.name}}</div>
+        
+            <div class="taskDetail w-2/5 flex flex-wrap justify-around bg-slate-200 rounded-lg text-slate-700 font-semibold p-2 m-2" *ngFor="let d of t.detail">
+                <span class="w-2/5 flex justify-start items-center">Name: {{d.name}}</span> 
+                <span class="w-2/5 flex justify-start items-center">Date: {{d.startDate}} - {{d.endDate}}</span>
+                <span class="w-[90%]">Description: {{d.description}}</span>
+                <span class="w-2/5">Status: {{d.status}}</span>
+                <span class="w-2/5">Assigned to: {{d.nameStaff}}</span>
+                <span class="w-2/5 flex justify-start my-2">
+                    <button *ngIf="d.confirm === 'true'" 
+                        (click)="handleTask('confirm',d.idTask)"
+                        class="w-[100px] h-[30px] rounded-lg text-white bg-green-600 hover:bg-green-500 transition-all">Confirm</button>
+                    <button *ngIf="d.confirm === 'true'" 
+                        (click)="handleTask('redo',d.idTask)"
+                        class="w-[100px] h-[30px] rounded-lg text-white bg-red-600 hover:bg-red-500 transition-all mx-2">Redo task</button>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

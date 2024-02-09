@@ -1,1 +1,161 @@
-<p>Dashboard for Leader</p>
+<div class="flex justify-around w-full h-[80vh] py-2">
+  <div class="w-1/5 h-4/5">
+    <h1 class="text-slate-100 font-bold text-[20px] bg-slate-500 rounded-lg py-2 w-full text-center">
+      {{dataInfo?.role.toLocaleUpperCase()}}
+    </h1>
+
+    <div class="flex flex-col items-center justify-center py-4">
+      <img
+        class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
+        src="https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
+        alt="Bordered avatar"
+      />
+      <strong class="mx-2 mt-3">{{dataInfo?.name.toLocaleUpperCase()}}</strong>
+    </div>
+    <div class="flex justify-center bg-slate-500 rounded-lg mb-2">
+      <h1 class="text-slate-100 font-bold text-[20px] py-1 w-full text-center">
+        Summary
+      </h1>
+    </div>
+    <div class="flex justify-center">
+      <ul
+        class="flex-column space-y space-y-4 text-sm font-medium text-gray-500 w-full"
+      >
+        <li>
+          <div
+            class="inline-flex items-center justify-between px-4 py-3 rounded-lg text-black w-full bg-slate-300 "
+            aria-current="page"
+          >
+            Total Member
+            <span class="text-red-600">{{dataStaff.length}}</span>
+          </div>
+        </li>
+        <li>
+          <div
+          class="inline-flex items-center justify-between px-4 py-3 rounded-lg text-black w-full bg-slate-300 "
+          >
+            Total expense
+            <span class="text-red-600">{{totalExpense.toLocaleString('vi-VN')}} USD</span>
+          </div>
+        </li>
+        <li>
+          <div
+            class="inline-flex items-center justify-between px-4 py-3 rounded-lg text-black w-full bg-slate-300 "
+          >
+            Task in progress
+            <span class="text-red-600">{{taskProcess}}</span>
+          </div>
+        </li>
+        <li>
+          <div
+            class="inline-flex items-center justify-between px-4 py-3 rounded-lg text-black w-full bg-slate-300 "
+          >
+            Percent
+            <span class="text-red-600">{{percentProject}} %</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="flex-initial w-2/4 h-full bg-slate-200 rounded-lg p-2">
+    <div class="w-full flex justify-center my-2 rounded-lg">
+      <h1 class="text-blue-700 text-[20px] font-bold w-52 text-center">
+        Overall 
+      </h1>
+    </div>
+
+    <div class="relative overflow-x-auto">
+      <table
+        class="w-full text-sm text-left text-gray-500 "
+      >
+        <tbody>
+          <tr class="bg-white border-b-2 border-solid border-slate-600 rounded-sm">
+            <th
+              scope="row"
+              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap rounded-sm"
+            >
+              Expense
+            </th>
+
+            <td class="px-6 py-4 rounded-sm">{{projectProcess.expense?.toLocaleString('vi-VN')}}</td>
+          </tr>
+          <tr class="bg-white border-b-2 border-solid border-slate-600">
+            <th
+              scope="row"
+              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
+            >
+            Spent
+            </th>
+
+            <td class="px-6 py-4">{{projectProcess.spent?.toLocaleString('vi-VN')}}</td>
+          </tr>
+          <tr class="bg-white border-b-2 border-solid border-slate-600">
+            <th
+              scope="row"
+              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
+            >
+            Remain
+            </th>
+            <td class="px-6 py-4">{{(projectProcess.expense - projectProcess.spent).toLocaleString('vi-VN')}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="w-full flex justify-center">
+      <h1 class="text-blue-700 text-[20px] font-bold w-full mt-8 mb-4 text-center">
+        Member
+      </h1>
+    </div>
+
+    <div class="relative overflow-x-auto">
+      <table
+        class="w-full text-sm text-left text-gray-500 "
+      >
+        <thead
+          class="text-xs text-gray-700 uppercase bg-gray-100 "
+        >
+          <tr>
+            <th scope="col" class="px-6 py-3 ">Area</th>
+            <th scope="col" class="px-6 py-3">Total</th>
+            <th scope="col" class="px-6 py-3 ">
+              Break
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="bg-white" *ngFor="let a of statisticsArea">
+            <th
+              scope="row"
+              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
+            >
+              {{a.area.toLocaleUpperCase()}}
+            </th>
+            <td class="px-6 py-4">{{a.total}}</td>
+            <td class="px-6 py-4">{{a.break}}</td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+  <div class="flex-initial w-1/5 h-4/5">
+    <h1 class="text-slate-100 font-bold text-[20px] bg-slate-500 rounded-lg py-2 w-full text-center">
+      Member
+    </h1>
+    <div class="md:flex flex-wrap justify-center">
+      <div class="w-full h-auto rounded-md flex flex-wrap items-center justify-center my-2 cursor-pointer" *ngFor="let a of statisticsArea" (click)="filterArea(a.area)">
+        <div [ngClass]="{'bg-blue-700' : currentArea === a.area,'bg-slate-500':currentArea !== a.area}" class="w-full h-[30px] rounded-md flex items-center justify-center  text-white font-bold my-2 transition-all">{{a.area.toLocaleUpperCase()}}</div>
+        <div class="detail" [ngClass]="{'w-full': currentArea === a.area,'w-0 hidden':currentArea !== a.area}" 
+          class='h-auto bg-slate-400 overflow-hidden transition-all rounded-md'>
+          <div id={{a.area}} *ngFor="let data of a.detail" 
+          class='w-full h-auto p-2 rounded-md'>
+            <div class="w-full h-[20px] bg-blue-500 text-white text-[15px] font-bold rounded-sm my-1">
+              #{{data.idUser}}
+            </div>
+            <div class="text-white text-[17px] font-bold">{{data.name}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

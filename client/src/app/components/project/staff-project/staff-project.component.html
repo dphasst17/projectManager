@@ -1,1 +1,7 @@
-<p>staff-project works!</p>
+<div class="container w-4/5 mx-auto my-2">
+  <app-view-project
+    [data]="{ action: false, role: 'leader' }"
+  ></app-view-project>
+  <ng-container *ngIf="position === 'PM'"><app-pm-view-task></app-pm-view-task></ng-container>
+  <ng-container *ngIf="position !== 'PM'"><app-staff-view-task></app-staff-view-task></ng-container>
+</div>
