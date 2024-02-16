@@ -5,7 +5,9 @@ import { environment } from '../../environment/env';
 })
 export class ApiService {
   /* All fetch project */
-
+  startServer = async() => {
+    return fetch(`${environment.apiUrl}/`).then(res => res.json());
+  }
   fetchCreateUser = async(data:any,token:string) => {
     return fetch(`${environment.apiUrl}/auth/register`,{
       method:'POST',

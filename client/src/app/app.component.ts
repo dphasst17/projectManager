@@ -3,22 +3,29 @@ import { CommonModule } from '@angular/common';
 import { Router,RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/layout/header/header.component';
 import { FooterComponent } from './components/layout/footer/footer.component';
+import { LoadingComponent } from './components/loading/loading.component';
 import { Global } from './service/global.service';
 import {ApiService} from "../app/api/api.service"
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet,RouterLink, RouterLinkActive,HeaderComponent,FooterComponent],
+  imports: [CommonModule, RouterOutlet,RouterLink, RouterLinkActive,HeaderComponent,FooterComponent,LoadingComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
   pathLogin = window.location.href.split('/')[3];
   isLogin = this.globalService.isLogin
-  
+  loading:boolean = true
   constructor(private router: Router,private globalService: Global,private apiService: ApiService) {
   }
   ngOnInit(): void {
+    this.apiService.startServer()
+    .then(res => {
+      if(res === "Hello."){
+        this.loading = !this.loading
+      }
+    })
     if (!this.globalService.isLogin) {
       this.router.navigate(['/login'])
       return
