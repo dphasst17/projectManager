@@ -5,6 +5,7 @@ import * as response from "../../utils/handle.js"
 import * as message from "../../utils/message.js"
 import {handleRoleAdmin, verify} from "../../middleware/index.js"
 const router = express.Router();
+const setConcatMaxLength = `SET SESSION group_concat_max_len = 1000000;`
 const pool = poolConnectDB()
 router.post('/insert',verify,handleRoleAdmin,(req,res) => {
     const data = req.body;
@@ -18,16 +19,18 @@ router.post('/insert',verify,handleRoleAdmin,(req,res) => {
 router.post('/info',verify,(req,res) => {
     const idUser = req.idUser
     const sql = sqlQuery.getUser(idUser)
-    pool.query(sql,(err,results) => {
-        response.errResponseMessage(res,err,500,message.err500Message())
-        const parseData = results.map(e => {
-            return {
-                ...e,
-                position:e.position === null ? "" :e.position,
-                task:JSON.parse(e.task) === null ? [] : JSON.parse(e.task)
-            }
+    pool.query(setConcatMaxLength,(er,re) => {
+        pool.query(sql,(err,results) => {
+            response.errResponseMessage(res,err,500,message.err500Message())
+            const parseData = results.map(e => {
+                return {
+                    ...e,
+                    position:e.position === null ? "" :e.position,
+                    task:JSON.parse(e.task) === null ? [] : JSON.parse(e.task)
+                }
+            })
+            response.successResponseData(res,200,parseData)
         })
-        response.successResponseData(res,200,parseData)
     })
 })
 router.put('/update',verify,(req,res) => {

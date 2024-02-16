@@ -6,6 +6,7 @@ import * as message from "../../utils/message.js"
 import * as middle from "../../middleware/index.js"
 const router = express.Router();
 const pool = poolConnectDB()
+const setConcatMaxLength = `SET SESSION group_concat_max_len = 1000000;`
 router.get('/',(req,res) => {
     const sql = sqlQuery.getAllProject();
     pool.query(sql,(err,results) => {
@@ -54,25 +55,27 @@ router.post('/update/status/auto',(req,res) => {
 router.get('/status/:statusProject',(req,res) => {
     const status = req.params['statusProject']
     const sql = sqlQuery.getProjectByStatus(status);
-    pool.query(sql,(err,results) => {
-        response.errResponseMessage(res,err,500,message.err500Message())
-        const parseData = results.map(e => {
-            const task = JSON.parse(e.task)
-            const team = JSON.parse(e.teamDetail)
-            return {
-                ...e,
-                startDate:response.formatDate(e.startDate),
-                endDate:response.formatDate(e.endDate),
-                task: task === null ? [] : task.map(e => {return{
+    pool.query(setConcatMaxLength,(er,re) => {
+        pool.query(sql,(err,results) => {
+            response.errResponseMessage(res,err,500,message.err500Message())
+            const parseData = results.map(e => {
+                const task = JSON.parse(e.task)
+                const team = JSON.parse(e.teamDetail)
+                return {
                     ...e,
-                    start:response.formatDate(e.start),
-                    end:response.formatDate(e.end),
-                    finish:response.formatDate(e.finish),
-                }}),
-                teamDetail:team === null ? [] : team,
-            }
+                    startDate:response.formatDate(e.startDate),
+                    endDate:response.formatDate(e.endDate),
+                    task: task === null ? [] : task.map(e => {return{
+                        ...e,
+                        start:response.formatDate(e.start),
+                        end:response.formatDate(e.end),
+                        finish:response.formatDate(e.finish),
+                    }}),
+                    teamDetail:team === null ? [] : team,
+                }
+            })
+            response.successResponseData(res,200,parseData)
         })
-        response.successResponseData(res,200,parseData)
     })
 })
 router.get('/id/:id',(req,res) => {
@@ -131,16 +134,18 @@ router.get('/expense',(req,res) => {
 router.get('/task/status/:statusDetail',(req,res) => {
     const status = req.params['statusDetail']
     const sql = sqlQuery.getTaskByStatus(status);
-    pool.query(sql,(err,results) => {
-        response.errResponseMessage(res,err,500,message.err500Message())
-        const parseDate = results.map(e => {
-            const parseDetail = JSON.parse(e.detail)
-            return {
-                ...e,
-                detail:parseDetail.every(c => Object.values(c).every(value => value === null)) ? [] : parseDetail,
-            }
+    pool.query(setConcatMaxLength,(er,re) => {
+        pool.query(sql,(err,results) => {
+            response.errResponseMessage(res,err,500,message.err500Message())
+            const parseDate = results.map(e => {
+                const parseDetail = JSON.parse(e.detail)
+                return {
+                    ...e,
+                    detail:parseDetail.every(c => Object.values(c).every(value => value === null)) ? [] : parseDetail,
+                }
+            })
+            response.successResponseData(res,200,parseDate)
         })
-        response.successResponseData(res,200,parseDate)
     })
 })
 router.post('/task/todo',middle.verify,middle.handleRoleAdmin,(req,res) => {
