@@ -1,10 +1,5 @@
 import express from "express";
 import dotenv from "dotenv";
-
-/* import {
-  verify,
-  handleCheckRole,
-} from "./middleware/index.js"; */
 import authRouter from "./api/auth/auth.js";
 import projectRouter from "./api/project/project.js"
 import userRouter from "./api/user/user.js"
