@@ -41,7 +41,7 @@ router.get('/filter/:year',(req,res) => {
 
 })
 router.post('/update/status/auto',(req,res) => {
-    const currentDate = new Date().toLocaleDateString().split("/").reverse().join("-")
+    const currentDate = new Date().toISOString().split('T')[0]
     const sql = sqlQuery.updateStatusProjectByDate(currentDate)
     const sqlTask = sqlQuery.updateStatusTaskByDate(currentDate)
     pool.query(sql,(err,results) => {
