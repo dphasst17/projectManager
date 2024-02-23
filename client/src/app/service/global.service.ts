@@ -12,6 +12,8 @@ export class Global {
   public modalDetail:boolean = false;
   private project = new BehaviorSubject<any[]>([]);
   currentProject = this.project.asObservable();
+  private projectProcess = new BehaviorSubject<any[]>([]);
+  currentProjectProcess = this.projectProcess.asObservable();
   private infoSource = new BehaviorSubject<any[]>([]);
   currentInfo = this.infoSource.asObservable();
   private staffSource = new BehaviorSubject<any[]>([]);
@@ -24,6 +26,9 @@ export class Global {
   }
   changeProject(project:any[]){
     this.project.next(project);
+  }
+  changeProjectProcess(project:any[]){
+    this.projectProcess.next(project)
   }
   changeInfo(info: any[]) {
     this.infoSource.next(info);
@@ -44,5 +49,8 @@ export class Global {
   }
   calculatorPage(length:number,activePages:number){
     return length * activePages
+  }
+  formatDate(type:string,date:string){
+    return type === "-" ? date.split("/").reverse().join("-") : date.split("-").reverse().join("/") 
   }
 }

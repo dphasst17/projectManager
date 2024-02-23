@@ -16,6 +16,7 @@ export class HeaderComponent implements OnInit  {
   }
   pathName:string = window.location.href.split('/')[3];
   ngOnInit(): void {
+    this.role = this.global.role
   }
   navigateToDynamicPage(pageName: string) {
     this.router.navigate([pageName]);

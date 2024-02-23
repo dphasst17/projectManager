@@ -6,7 +6,7 @@
         
             <div class="taskDetail w-2/5 flex flex-wrap justify-around bg-slate-200 rounded-lg text-slate-700 font-semibold p-2 m-2" *ngFor="let d of t.detail">
                 <span class="w-2/5 flex justify-start items-center">Name: {{d.name}}</span> 
-                <span class="w-2/5 flex justify-start items-center">Date: {{d.startDate}} - {{d.endDate}}</span>
+                <span class="w-2/5 flex justify-start items-center">Date: {{d.start}} - {{d.endDate}}</span>
                 <span class="w-[90%]">Description: {{d.description}}</span>
                 <span class="w-2/5">Status: {{d.status}}</span>
                 <span class="w-2/5">Assigned to: {{d.nameStaff}}</span>

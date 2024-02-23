@@ -91,6 +91,15 @@ export class ApiService {
       }
     }).then(res => res.json())
   }
+  fetchUpdateProject = async(id:number,data:any) => {
+    return fetch(`${environment.apiUrl}/api/project/`,{
+      method:'PUT',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({idProject:id,detail:data})
+    }).then(res => res.json())
+  }
   fetchConfirmTask = async(idTask:number,obj:any) => {
     return fetch(`${environment.apiUrl}/api/project/task/update`,{
       method:'PATCH',

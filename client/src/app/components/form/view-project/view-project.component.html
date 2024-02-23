@@ -45,7 +45,7 @@
       <td class="border px-4 py-2">{{ p.totalTask }}</td>
       <td class="border px-4 py-2">{{ p.projectStatus }}</td>
       <td
-        *ngIf="position === 'PM' && p.projectStatus !== 'complete' && p.taskCreated?.length === 0"
+        *ngIf="position === 'PM' && p.projectStatus !== 'complete' && p.taskCreated === 0"
         class="w-full py-2 flex justify-around items-center"
       >
         <button (click)="changeModalAddForm(true);setCurrentProject(p.idProject)" class="w-2/5 h-full bg-blue-600 text-white rounded-lg">
@@ -77,11 +77,13 @@
     staffProject: listStaffProject
   }"
   (detailChange)="detail = $event"
+  (changeProject)="projectDetail = $event"
 >
 </app-detail>
 <ng-container *ngIf="currentRole === 'leader'">
   <app-project
     [data]="{ isForm: addForm,project:project}"
+
     (changeForm)="addForm=$event"
     (changeProject)="project=$event"
   ></app-project>

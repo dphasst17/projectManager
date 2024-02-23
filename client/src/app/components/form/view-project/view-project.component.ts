@@ -27,14 +27,9 @@ export class ViewProjectComponent implements OnInit {
     this.currentRole = this.global.role
     this.global.currentInfo.subscribe(i => this.position = i[0]?.position)
     if(this.data.role === 'staff'){
-      const token= this.global.getValueLocal('t')
-      if(token){
-        this.apiService.fetchProjectByStaff(token).then(res => {
-          if(res.status === 200){
-            this.project = res.data
-          }
-        })
-      }
+      this.global.currentInfo.subscribe(staff => {
+        this.project = staff[0]?.project
+      })
     }else{
       this.global.currentProject.subscribe(p => this.project = p)
     }

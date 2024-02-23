@@ -33,6 +33,7 @@ export class PmViewTaskComponent implements OnInit{
     }
     this.apiService.fetchConfirmTask(idTask,obj).then(res => {
       if(res.status === 200){
+        console.log(this.allTask)
         this.allTask = this.allTask.map((e:any) => {
           return {
             ...e,

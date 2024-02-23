@@ -29,7 +29,7 @@ export class ProjectComponent implements OnInit{
   listStaff:any = [];
   constructor(private global:Global,private apiService:ApiService) {}
   ngOnInit(): void {
-    this.global.currentStaff.subscribe(data => this.staff = data)
+    this.global.currentStaff.subscribe(data => {this.staff = data})
   }
 
   onSubmit = (input:InputType) => {
@@ -62,6 +62,12 @@ export class ProjectComponent implements OnInit{
           this.changeProject.emit ([...this.data.project,result])
           this.global.changeProject([...this.data.project,result])
           this.changeForm.emit(false)
+          this.global.currentStaff.subscribe(e => this.global.changeStaffData(e.map(d => {
+            return {
+              ...d,
+              action : this.listStaff.includes(d.idUser) ? 'working' : d.action
+            }
+          })))
           this.listStaff = []
         }else{
           alert(res.message)
@@ -70,6 +76,6 @@ export class ProjectComponent implements OnInit{
     }
 }
   addStaff(id:string){
-    this.listStaff = this.listStaff.filter((e:string) => e.includes(id)).length !== 0 ? this.listStaff.filter((e:string) => e !== id) : [id,...this.listStaff]
+    this.listStaff = this.listStaff.filter((e:string) => e===id).length !== 0 ? this.listStaff.filter((e:string) => e !== id) : [id,...this.listStaff]
   } 
 }

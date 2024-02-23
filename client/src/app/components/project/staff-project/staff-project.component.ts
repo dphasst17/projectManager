@@ -18,30 +18,4 @@ export class StaffProjectComponent implements OnInit {
   ngOnInit() {
     this.global.currentInfo.subscribe(i => this.position = i[0]?.position)
   }
-  //handleAddTask?
-  onSubmit = (input:{taskname:string, description: string, project: string, assignedTo: string, priority: string, status: string}) => {
-    document.getElementById('taskname')?.classList.add(input.taskname === "" ? 'border-red-500' : 'border-green-500')
-    document.getElementById('description')?.classList.add(input.description === "" ? 'border-red-500' : 'border-green-500')
-    document.getElementById('project')?.classList.add(input.project === "" ? 'border-red-500' : 'border-green-500')
-    document.getElementById('assignedTo')?.classList.add(input.assignedTo === "" ? 'border-red-500' : 'border-green-500')
-    document.getElementById('priority')?.classList.add(input.priority === "" ? 'border-red-500' : 'border-green-500')
-    document.getElementById('status')?.classList.add(input.status === "" ? 'border-red-500' : 'border-green-500');
-
-    if(input.taskname !== "" && input.description !== "" && input.project !== ""&& input.assignedTo !== ""&& input.priority !== ""&& input.status !== "") {
-      this.closeModal()
-    }
-  }
-
-  showModal: boolean = false;
-  modalScale: string = 'scale-0';
-
-  openModal() {
-    this.showModal = true;
-    this.modalScale = 'scale-100';
-  }
-
-  closeModal() {
-    this.showModal = false;
-    this.modalScale = 'scale-0';
-  }
 }

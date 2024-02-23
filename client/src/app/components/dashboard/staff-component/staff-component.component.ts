@@ -14,22 +14,26 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angula
 export class StaffComponentComponent implements OnInit {
   formEdit: FormGroup;
   formPassword: FormGroup;
+  //Thông tin nhân viên
   dataInfo:any = [];
-  taskByProject:any = [];
+  //Danh sách nhân viên trong dự án
   staffProject:any = [];
   projectDetail:any = [];
-  listStaffProject:any = [];
+  //Thông tin dự án đã tham gia và các task đã thực hiên trong dự án đó của nhân viên
   resultProject:any = [];
+  //Trạng thái cho 2 form là edit info và update password
   formBoolean:any = {
     edit:false,
     password: false
   }
   constructor(private global: Global, private apiService: ApiService){
+    //Khởi tạo form update password
     this.formPassword = new FormGroup({
       'current': new FormControl(null, Validators.required),
       'new': new FormControl(null, Validators.required),
       'confirm': new FormControl(null, Validators.required),
     });
+    //Khởi tạo form edit info
     this.formEdit = new FormGroup({
       'name': new FormControl(this.dataInfo?.name, Validators.required),
       'phone': new FormControl(this.dataInfo?.phone, Validators.required),
@@ -39,23 +43,19 @@ export class StaffComponentComponent implements OnInit {
     
   }
   ngOnInit(){
-    const token= this.global.getValueLocal('t')
-    if(token){
-      this.apiService.fetchProjectByStaff(token).then(res => {
-        if(res.status === 200){
-          this.staffProject = res.data
-        }
-      })
-    }
+
     this.global.currentInfo.subscribe(staff => {
       this.dataInfo = staff[0]
+      this.staffProject = staff[0]?.project
       this.formEdit.patchValue({
         'name': this.dataInfo?.name,
         'phone': this.dataInfo?.phone,
         'email': this.dataInfo?.email,
         'address': this.dataInfo?.address,
       });
+      //lấy danh sách dự án
       const listProject = Array.from(new Set(staff[0]?.task.map((e:any) => e.nameProject)))
+      // format lại danh sách dự án: thêm 1 array detail và trong với detail là danh sách các task đã thực hiện bởi nhân viên
       const formatProject = listProject.map((e:any) => {
         return {
           project:e,
@@ -65,6 +65,7 @@ export class StaffComponentComponent implements OnInit {
       this.resultProject = formatProject
     })
   }
+  //Validate form edit info
   onSubmit(){
     if (this.formEdit.invalid) {
       Object.keys(this.formEdit.controls).forEach(field => {
@@ -73,6 +74,7 @@ export class StaffComponentComponent implements OnInit {
       });
       return
     }
+
     this.apiService.fetchUpdateUser(this.global.token,this.formEdit.value)
     .then(res => {
       alert(res.message)
@@ -82,6 +84,7 @@ export class StaffComponentComponent implements OnInit {
       }
     })
   }
+  // Validate form update password
   onSubmitPassword(){
     const value = this.formPassword.value
     if (this.formPassword.invalid) {
@@ -91,6 +94,7 @@ export class StaffComponentComponent implements OnInit {
       });
       return
     }
+    //Check mật khẩu mới và xác nhận mật khẩu có giống nhau không 
     if(value.confirm !== value.new){
       alert("Confirm password doesn't match with new password")
       return
@@ -103,16 +107,9 @@ export class StaffComponentComponent implements OnInit {
       } 
     })
   }
+  //Cập nhật trạng thái cho form (thay đổi thông tin / cập nhật mật khẩu)
   effectModal(modal:string){
     this.formBoolean[modal] = !this.formBoolean[modal]
-  }
-  fetchData(idProject:any){
-    this.apiService.fetchProjectById(idProject).then(res => {
-      if(res.status === 200){
-        this.projectDetail = res.data
-        this.listStaffProject = res.data[0].teamDetail.flatMap((e:any) => e.staff)
-      }
-    })
   }
   formatDate(date:any){
     return date.split("/").reverse().join("-")

@@ -120,8 +120,9 @@
               class="detail w-[25%] h-[30px] m-2 text-white rounded-lg cursor-pointer"
               *ngFor="let s of staff"
               [ngClass]="{
-                'bg-blue-500 ': listStaff.includes(s.idUser),
-                'bg-slate-500': !listStaff.includes(s.idUser)
+                'bg-blue-500 ': listStaff.includes(s.idUser) && s.action === 'none',
+                'bg-slate-500 ': !listStaff.includes(s.idUser) && s.action === 'none',
+                'bg-red-500 ': s.action !== 'none'
               }"
             >
               <label
@@ -131,7 +132,7 @@
                 <input
                   type="checkbox"
                   class="hidden"
-                  (click)="addStaff(s.idUser)"
+                  (click)="s.action === 'none' && addStaff(s.idUser)"
                 />
               </label>
             </div>

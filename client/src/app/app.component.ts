@@ -35,20 +35,60 @@ export class AppComponent implements OnInit {
       window.location.href="/login"
       return
     }
+    const token= this.globalService.getValueLocal('t')
+    //Cập nhật trạng thái có dự án cũng như các task
     this.apiService.fetchAutoUpdateStatus().then(res => console.log(res.message))
+    //Lây danh sách dự án và cập nhật lại biến global project
     this.apiService.fetchProject().then(res => {
       if(res.status === 200){
         this.globalService.changeProject(res.data)
       }
     })
+    //Lấy thông tin người đang đăng nhập
     this.apiService.fetchInfo(this.globalService.token).then(async(res) => {
       if(res.status === 200){
-        this.globalService.changeInfo(res.data);
+        if(token){
+          res.data[0].role === 'leader' && this.globalService.changeInfo(res.data);
+          res.data[0].role === 'staff' && this.apiService.fetchProjectByStaff(token).then(resP => {
+            if(resP.status === 200){
+              res.data[0].position === 'PM' && this.globalService.changeInfo(
+                res.data.map((e:any) => {
+                  return {
+                    ...e,
+                    project:resP.data
+                  }
+                })
+              );
+              res.data[0].position !== 'PM' && this.apiService.fetchTaskTodoByStaff(token)
+              .then(resT => {
+                if(resT.status === 200){
+
+                  const result = res.data.map((e:any) => {
+                    return {
+                      ...e,
+                      project:resP.data,
+                      todo:resT.data
+                    }
+                  })
+
+                  this.globalService.changeInfo(result);
+                }
+                })
+            }
+          })
+        }
       }
     })
     this.apiService.fetchStaff().then(res => {
       if(res.status === 200){
         this.globalService.changeStaffData(res.data)
+        
+      }
+    })
+    this.globalService.role === 'leader' && this.apiService.fetchProjectByStatus('processing')
+    .then(res => {
+      if(res.status === 200){
+        this.globalService.changeProjectProcess(res.data[0])
       }
     })
   }

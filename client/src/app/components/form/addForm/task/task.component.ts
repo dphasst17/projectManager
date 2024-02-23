@@ -19,7 +19,6 @@ export class TaskComponent implements OnInit{
   ngOnInit(): void {
     this.global.currentStaff.subscribe(data => this.staff = data.filter(f => f.idUser !== 'leader' && f.idUser !== 'projectmanager'))
   }
-
   submitTask(){
     let listTask: any[] = [];
     let result:any[] = []

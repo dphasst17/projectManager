@@ -14,8 +14,9 @@ export class StaffViewTaskComponent implements OnInit{
   constructor(private global:Global,private apiService:ApiService){}
   
   ngOnInit(): void {
-    this.apiService.fetchTaskTodoByStaff(this.global.token)
-    .then(res => this.taskTodo = res.data)
+    this.global.currentInfo.subscribe(staff => {
+      this.taskTodo = staff[0]?.todo
+    })
   }
   submitTask(idTask:number){
     const obj = {
