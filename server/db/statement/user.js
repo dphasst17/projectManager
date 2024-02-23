@@ -33,6 +33,10 @@ export const updateAction = (idUser,newAction) => {
     const sql = `UPDATE info SET action = '${newAction}' WHERE idUser = '${idUser}';`;
     return sql;
 }
+export const updateActionInList = (listUser,newAction) => {
+    const sql = `UPDATE info SET action = '${newAction}' WHERE idUser IN (${listUser.map(e => `'${e.idUser}'`)});`;
+    return sql;
+}
 export const getStaff = () => {
     const sql = `SELECT i.idUser,i.name,i.email,i.area,a.role,p.positionDetail AS position,i.action
     FROM info i 

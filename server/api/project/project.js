@@ -4,6 +4,7 @@ import { poolConnectDB } from "../../db/db.js";
 import * as response from "../../utils/handle.js"
 import * as message from "../../utils/message.js"
 import * as middle from "../../middleware/index.js"
+import { updateActionInList } from "../../db/statement/user.js";
 const router = express.Router();
 const pool = poolConnectDB()
 const setConcatMaxLength = `SET SESSION group_concat_max_len = 1000000;`
@@ -196,9 +197,12 @@ router.post('/create',(req,res) => {
         response.errResponseMessage(res,err,500,message.err500Message());
         const resultId = results.insertId
         const sqlDetail = sqlQuery.insertProjectDetail(resultId,data.detail)
+        const updateAction = updateActionInList(data.detail,'working')
         pool.query(sqlDetail,(errDetail,resultsDetail) => { 
-            response.errResponseMessage(res,errDetail,500,message.err500Message());
-            response.successResponseMessageAndData(res,201,message.createItemsMessage('project'),{idProject:resultId})
+            pool.query(updateAction,(errUpdate,resultUpdate) => {
+                response.errResponseMessage(res,errUpdate,500,message.err500Message());
+                response.successResponseMessageAndData(res,201,message.createItemsMessage('project'),{idProject:resultId})
+            })
         })
     })
 
@@ -210,6 +214,16 @@ router.post('/create/task',(req,res) => {
     pool.query(sql,(err,results) => {
         response.errResponseMessage(res,err,500,message.err500Message());
         response.successResponseMessage(res,201,message.createItemsMessage('task'))
+    })
+})
+
+router.put('/',(req,res) => {
+    const data = req.body;
+    const sql = `UPDATE project SET name = '${data.detail.name}',startDate = '${data.detail.startDate}', endDate = '${data.detail.endDate}',teamSize = '${data.detail.teamSize}',
+    expense = ${data.detail.expense},totalTask = ${data.detail.totalTask} WHERE idProject = ${data.idProject};`
+    pool.query(sql,(err,results) => {
+        response.errResponseMessage(res,err,500,message.err500Message())
+        response.successResponseMessage(res,200,message.updateItemsMessage('project'))
     })
 })
 router.delete('/',(req,res) => {
