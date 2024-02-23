@@ -82,25 +82,28 @@ router.get('/status/:statusProject',(req,res) => {
 router.get('/id/:id',(req,res) => {
     const id = req.params['id']
     const sql = sqlQuery.getProjectById(id);
-    pool.query(sql,(err,results) => {
-        response.errResponseMessage(res,err,500,message.err500Message())
-        const parseData = results.map(e => {
-            const task = JSON.parse(e.task)
-            const team = JSON.parse(e.teamDetail)
-            return {
-                ...e,
-                startDate:response.formatDate(e.startDate),
-                endDate:response.formatDate(e.endDate),
-                task: task === null ? [] : task.map(e => {return{
+    pool.query(setConcatMaxLength,(errors,set) => {
+
+        pool.query(sql,(err,results) => {
+            response.errResponseMessage(res,err,500,message.err500Message())
+            const parseData = results.map(e => {
+                const task = JSON.parse(e.task)
+                const team = JSON.parse(e.teamDetail)
+                return {
                     ...e,
-                    start:response.formatDate(e.start),
-                    end:response.formatDate(e.end),
-                    finish:response.formatDate(e.finish),
-                }}),
-                teamDetail:team === null ? [] : team,
-            }
+                    startDate:response.formatDate(e.startDate),
+                    endDate:response.formatDate(e.endDate),
+                    task: task === null ? [] : task.map(e => {return{
+                        ...e,
+                        start:response.formatDate(e.start),
+                        end:response.formatDate(e.end),
+                        finish:response.formatDate(e.finish),
+                    }}),
+                    teamDetail:team === null ? [] : team,
+                }
+            })
+            response.successResponseData(res,200,parseData)
         })
-        response.successResponseData(res,200,parseData)
     })
 })
 router.post('/staff',middle.verify,(req,res) => {
